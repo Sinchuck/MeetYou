@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorTime">#00ffff</color>
+    <color name="menuSelected">#2590af</color>
+    <color name="personalCenterBackground">#EAEAEA</color>
+    <color name="colorId">#999999</color>
+    <color name="colorCancel">#2590af</color>
+    <color name="colorBackground">#a9abe3</color>
+    <color name="publishBackground">#EAEAEA</color>
+    <color name="colorApplicationTitle">#181616</color>
+    <color name="colorMenuBar">#FCFCFC</color>
+
+</resources>
+

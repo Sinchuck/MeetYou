@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:background="@color/personalCenterBackground">
+
+    <include
+        android:id="@+id/activity_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        layout="@layout/activity_title"/>
+
+
+    <LinearLayout
+        android:id="@+id/linear_heads_and_kind"
+        android:layout_below="@+id/activity_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:layout_marginTop="10dp">
+        <LinearLayout
+            android:id="@+id/linear_other_heads"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@mipmap/heads"/>
+    <LinearLayout
+        android:layout_marginLeft="15dp"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:orientation="vertical">
+        <TextView
+            android:paddingTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="我是谁"
+            android:singleLine="true"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textSize="16sp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="账号:"
+                android:textSize="14sp"
+                android:layout_gravity="center"
+                android:textColor="@color/colorId"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="201430614243"
+                android:textSize="14sp"
+                android:layout_gravity="center"
+                android:textColor="@color/colorId"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:padding="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="体育"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/bg_cancel"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@+id/linear_heads_and_kind"
+        android:id="@+id/linear_theme"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主题:"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:padding="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_theme_edit"
+            android:textSize="20sp"
+            android:text="C10约球的走起"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_time_num"
+        android:layout_below="@+id/linear_theme"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff">
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="时间:"
+            android:textSize="20sp"/>
+        <TextView
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="2016.09.30"
+            android:background="@drawable/bg_select"/>
+        <TextView
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="人数:"
+            android:textSize="20sp"/>
+        <TextView
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="10"
+            android:background="@drawable/bg_select"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linear_content"
+        android:layout_below="@+id/linear_time_num"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:background="#fff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:background="@drawable/bg_content_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:textSize="20sp"
+            android:singleLine="false"
+            android:text="09.30下午5点C10要打球的来，go go go!"
+            android:lines="6"
+            />
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:padding="10dp"
+        android:background="#fff"
+        android:layout_below="@+id/linear_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/comment"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_cancel"
+            android:text="查看评论"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_toLeftOf="@+id/comment"
+            android:padding="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_cancel"
+            android:text="关注"
+            android:textSize="20sp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

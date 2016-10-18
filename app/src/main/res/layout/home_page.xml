@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              >
+
+    <include
+        android:id="@+id/application_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        layout="@layout/application_title"/>
+    <LinearLayout
+        android:layout_below="@+id/application_title"
+        android:id="@+id/searchAndKind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:background="@color/colorMenuBar">
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_marginTop="10dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="20sp"
+            android:inputType="text"
+            android:padding="6dp"
+            android:focusable="false"
+            android:hint="请输入搜索内容..."
+            android:background="@drawable/bg_search_edit"
+            android:layout_marginLeft="30dp"/>
+
+       <TextView
+           android:layout_marginTop="10dp"
+           android:padding="9dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:background="@color/colorPrimary"
+           android:text="搜索"
+           android:textSize="18dp"/>
+
+
+
+      <TextView
+          android:layout_marginTop="10dp"
+          android:textSize="18dp"
+          android:padding="8dp"
+          android:text="体育"
+          android:singleLine="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="20dp"
+          android:background="@drawable/bg_select"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/searchAndKind"
+        />
+
+    <ListView
+    android:layout_above="@+id/view_line"
+        android:layout_below="@+id/view_line1"
+            android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lv_activity"/>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/menuBar"
+        />
+
+    <LinearLayout
+        android:id="@+id/menuBar"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorMenuBar"
+        android:padding="10dp"
+        android:gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_home_page"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/homePage"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:textColor="@color/menuSelected"
+            />
+        <TextView
+            android:id="@+id/tv_concern"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20dp"
+            android:text="@string/concern"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/tv_publish"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20dp"
+            android:text="@string/publish"
+            android:gravity="center"
+            />
+        <TextView
+            android:id="@+id/tv_personalCenter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20dp"
+            android:text="@string/personCenter"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <View android:layout_width="0dip"
+          android:layout_height="0dip"
+          android:focusableInTouchMode="true" />
+</RelativeLayout>

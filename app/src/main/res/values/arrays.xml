@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="kind_activity">
+        <item>学习</item>
+        <item>手游</item>
+        <item>体育</item>
+        <item>电子竞技</item>
+        <item>聚会</item>
+        <item>其他</item>
+    </string-array>
+</resources>

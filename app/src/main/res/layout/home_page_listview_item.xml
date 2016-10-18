@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <ImageView
+        android:id="@+id/iv_kind"
+        android:layout_width="80dp"
+        android:layout_height="64dp"
+        android:src="@mipmap/kobi"/>
+
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_width="200dp"
+        android:layout_height="64dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_publisher_id"
+            android:padding="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="201430614243"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/tv_theme"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:text="C10约球走起"
+            android:singleLine="true"
+            android:textSize="20sp"
+            android:padding="4dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_publisher_time"
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:textColor="@color/colorCancel"
+        android:text="2016.09.20"/>
+</LinearLayout>
