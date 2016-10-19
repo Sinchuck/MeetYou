@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.accounts.LoginActivity;
+
 /**
  * Created by Yang on 2016/9/25.
  */

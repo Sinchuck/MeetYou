@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_sign_up"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#f8f8f8"
+    android:orientation="vertical"
+    tools:context="com.example.yang.meetyou.accounts.SignUpActivity">
+
+    <LinearLayout
+        android:id="@+id/layout_sign_up_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical">
+        <com.example.yang.meetyou.views.CleanEditText
+            android:id="@+id/et_sing_up_account"
+            android:hint="学生账号"
+            style="@style/login_edit_style"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="#f8f8f8"/>
+
+        <com.example.yang.meetyou.views.CleanEditText
+            android:id="@+id/et_sing_up_password"
+            android:hint="密码"
+            style="@style/login_edit_style"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="#f8f8f8"/>
+
+        <com.example.yang.meetyou.views.CleanEditText
+            android:id="@+id/et_nickname"
+            android:hint="昵称"
+            style="@style/login_edit_style"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_create_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="65dp"
+        android:text="创建账号"
+        android:textColor="#5c5c5c"
+        android:textSize="16sp"
+        android:background="@drawable/btn_login_selector"
+        android:layout_below="@+id/layout_sign_up_account"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
