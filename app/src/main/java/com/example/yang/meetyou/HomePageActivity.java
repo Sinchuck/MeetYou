@@ -1,7 +1,9 @@
 package com.example.yang.meetyou;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -13,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.accounts.LoginActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,13 +25,18 @@ import java.util.List;
  */
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener{
 
+    public static final String FIRST_USE = "first_use";
+
     ListView activityListView;
-    List<Huodong> mHuodongList = new ArrayList<Huodong>();
+    List<Huodong> mHuodongList = new ArrayList<>();
     EditText  mEditText;
     TextView mHomePage;
     TextView mConcern;
     TextView mPublish;
     TextView mPersonalCenter;
+
+    private SharedPreferences sp;
+
     protected void onCreate(@Nullable Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -37,6 +46,12 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         mConcern = (TextView) findViewById(R.id.tv_concern);
         mPersonalCenter = (TextView) findViewById(R.id.tv_personalCenter);
         mPublish = (TextView) findViewById(R.id.tv_publish);
+
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sp.getBoolean(FIRST_USE, true)) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
 
         mHomePage.setOnClickListener(this);
         mConcern.setOnClickListener(this);

@@ -1,12 +1,17 @@
 package com.example.yang.meetyou.accounts;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,15 +20,38 @@ import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.utils.RegexUtils;
 import com.example.yang.meetyou.views.CleanEditText;
 
-public class SignUpActivity extends AppCompatActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+public class SignUpActivity extends AppCompatActivity
+implements AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "SignUpActivity";
+
+    private static int gender = 0;
+    private int status = 0;
 
     private CleanEditText mAccountEt;
     private CleanEditText mPasswordEt;
     private CleanEditText mNicknameEt;
+    private CleanEditText mPhoneNumberEt;
 
     private Button mCreateAccountBtn;
+
+    private Spinner mGenderSpinner;
+
+    String account;
+    String password;
+    String nickname;
+    String phoneNumber;
+
+    final OkHttpClient mClient = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +68,11 @@ public class SignUpActivity extends AppCompatActivity {
         mPasswordEt = (CleanEditText) findViewById(R.id.et_sing_up_password);
         mPasswordEt.setImeOptions(EditorInfo.IME_ACTION_NEXT); //下一步
         mNicknameEt = (CleanEditText) findViewById(R.id.et_nickname);
-        mNicknameEt.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        mNicknameEt.setImeOptions(EditorInfo.IME_ACTION_GO);
-        mNicknameEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mNicknameEt.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        mPhoneNumberEt = (CleanEditText) findViewById(R.id.et_phone_number);
+        mPhoneNumberEt.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        mPhoneNumberEt.setImeOptions(EditorInfo.IME_ACTION_GO);
+        mPhoneNumberEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE
@@ -52,6 +82,14 @@ public class SignUpActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        mGenderSpinner = (Spinner) findViewById(R.id.gender_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.gender, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mGenderSpinner.setAdapter(adapter);
+        mGenderSpinner.setOnItemSelectedListener(this);
+
         mCreateAccountBtn = (Button) findViewById(R.id.btn_create_account);
         mCreateAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,22 +100,30 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void singUp() {
-        if (commitInfo()) {
-            Intent intent = new Intent(SignUpActivity.this, HomePageActivity.class);
-            startActivity(intent);
-            finish();
+
+        account = mAccountEt.getText().toString().trim();
+        password = mPasswordEt.getText().toString().trim();
+        nickname = mNicknameEt.getText().toString().trim();
+        phoneNumber = mPhoneNumberEt.getText().toString().trim();
+
+        if (checkInfo(account, password, nickname)) {
+            new GetStatus().execute();
         }
     }
 
-    private boolean commitInfo() {
-        String account = mAccountEt.getText().toString().trim();
-        String password = mPasswordEt.getText().toString().trim();
-        String nickname = mNicknameEt.getText().toString().trim();
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        Log.i(TAG, "位置" + pos);
+        gender = genderNumber(pos);
+    }
 
-        if (checkInfo(account, password, nickname)) {
-            // TODO:发送给服务器处理，注册成功后返回true，失败返回false
-        }
-        return true;
+    public void onNothingSelected(AdapterView<?> parent) {
+        //do nothing
+    }
+
+    private int genderNumber(int pos) {
+        if (pos == 0)
+            return 1;
+        return 0;
     }
 
     private boolean checkInfo(String account, String password, String nickname) {
@@ -96,5 +142,58 @@ public class SignUpActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    private class GetStatus extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            String requestURL = "http://119.29.224.50/meetyou/public/register?user_account=" + account
+                    + "&user_passwd=" + password + "&user_nickName=" + nickname
+                    +"&user_sex=" + gender + "&user_contacts=" + phoneNumber;
+
+            final Request request = new Request.Builder()
+                    .get()
+                    .tag(this)
+                    .url(requestURL)
+                    .build();
+
+            Response response;
+            try {
+                response = mClient.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        status = jsonObject.getInt("msgCode");
+                        Log.i(TAG, status + "");
+                    } catch (JSONException je) {
+                        je.printStackTrace();
+                    }
+                } else {
+                    throw new IOException("Unexpected code " + response);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean sta) {
+            if (status == 201) {
+                Toast.makeText(SignUpActivity.this, "该用户已注册", Toast.LENGTH_SHORT).show();
+            } else if (status == 202) {
+                Toast.makeText(SignUpActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(SignUpActivity.this, HomePageActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(SignUpActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

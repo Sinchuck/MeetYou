@@ -1,13 +1,18 @@
 package com.example.yang.meetyou.accounts;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,18 +21,44 @@ import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.utils.RegexUtils;
 import com.example.yang.meetyou.views.CleanEditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class LoginActivity extends AppCompatActivity {
+
+    private static final String TAG = "LoginActivity";
 
     private CleanEditText mAccountEt;
     private CleanEditText mPasswordEt;
+
     private Button mLoginButton;
     private Button mSignUpButton;
+
+    private TextView mForgetPasswordTextView;
+
+    private CheckBox mRememberPasswordCb;
+
+    final OkHttpClient mClient = new OkHttpClient();
+
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+
+    int status;
+
+    String account;
+    String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.login);
+        setContentView(R.layout.activity_login);
 
         initViews();
 
@@ -52,8 +83,31 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         mLoginButton = (Button) findViewById(R.id.bt_login);
         mSignUpButton = (Button) findViewById(R.id.bt_sign_up);
+
+        mForgetPasswordTextView = (TextView) findViewById(R.id.tv_forget_password);
+        mForgetPasswordTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                login();
+            }
+        });
+
+        mRememberPasswordCb = (CheckBox) findViewById(R.id.cb_remember_password);
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+//        boolean isRemember = mSharedPreferences.getBoolean("remember_password", false);
+//        if (isRemember) {
+//            String account = mSharedPreferences.getString("account", "");
+//            String password = mSharedPreferences.getString("password", "");
+//            mAccountEt.setText(account);
+//            mPasswordEt.setText(password);
+//            mRememberPasswordCb.setChecked(true);
+//
+//        }
     }
 
     private void clickLogin() {
@@ -68,27 +122,22 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login() {
-        String account = mAccountEt.getText().toString();
-        String password = mPasswordEt.getText().toString();
+        account = mAccountEt.getText().toString().trim();
+        password = mPasswordEt.getText().toString().trim();
+
         if (checkInput(account, password)) {
-            //这里需补填请求服务器代码
-            Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-            startActivity(intent);
-            finish();
+
+//            if (mRememberPasswordCb.isSelected()) {
+                mEditor = mSharedPreferences.edit();
+                mEditor.putBoolean(HomePageActivity.FIRST_USE, false);
+//                mEditor.putBoolean("remember_password", true);
+//                mEditor.putString("account", account);
+//                mEditor.putString("password", password);
+                mEditor.commit();
+//            }
+
+            new GetStatus().execute();
         }
-    }
-
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Intent home = new Intent(Intent.ACTION_MAIN);
-            home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            home.addCategory(Intent.CATEGORY_HOME);
-            startActivity(home);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     private void clickSignUp() {
@@ -110,9 +159,73 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "账号格式错误", Toast.LENGTH_SHORT).show();
         } else if (password == null || password.trim().equals("")) {
             Toast.makeText(this, "请输入你的密码", Toast.LENGTH_SHORT).show();
-        } else {                //这里需要判断密码是否正确
+        } else {
             return true;
         }
         return false;
+    }
+
+    private class GetStatus extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            String requestURL = "http://119.29.224.50/meetyou/public/login?user_account=" + account
+                    + "&user_passwd=" + password;
+
+            final Request request = new Request.Builder()
+                    .get()
+                    .tag(this)
+                    .url(requestURL)
+                    .build();
+
+            Response response;
+            try {
+                response = mClient.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        status = jsonObject.getInt("msgCode");
+                        Log.i(TAG, status + "");
+                    } catch (JSONException je) {
+                        je.printStackTrace();
+                    }
+                } else {
+                    throw new IOException("Unexpected code " + response);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean sta) {
+            if (status == 101) {
+                Toast.makeText(LoginActivity.this, "用户账号不存在", Toast.LENGTH_SHORT).show();
+            } else if (status == 103) {
+                Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                startActivity(intent);
+                finish();
+            } else if (status == 102){
+                Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent home = new Intent(Intent.ACTION_MAIN);
+            home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            home.addCategory(Intent.CATEGORY_HOME);
+            startActivity(home);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

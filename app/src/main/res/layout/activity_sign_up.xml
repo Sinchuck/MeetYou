@@ -21,7 +21,7 @@
         android:orientation="vertical">
         <com.example.yang.meetyou.views.CleanEditText
             android:id="@+id/et_sing_up_account"
-            android:hint="学生账号"
+            android:hint="@string/register_account"
             style="@style/login_edit_style"/>
 
         <View
@@ -31,7 +31,7 @@
 
         <com.example.yang.meetyou.views.CleanEditText
             android:id="@+id/et_sing_up_password"
-            android:hint="密码"
+            android:hint="@string/register_password"
             style="@style/login_edit_style"/>
 
         <View
@@ -41,8 +41,38 @@
 
         <com.example.yang.meetyou.views.CleanEditText
             android:id="@+id/et_nickname"
-            android:hint="昵称"
+            android:hint="@string/register_nickname"
             style="@style/login_edit_style"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="#f8f8f8"/>
+
+        <com.example.yang.meetyou.views.CleanEditText
+            android:id="@+id/et_phone_number"
+            android:hint="@string/register_phone_number"
+            style="@style/login_edit_style"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:textSize="15sp"
+                android:text="@string/gender_title"/>
+
+            <Spinner
+                android:id="@+id/gender_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:prompt="@string/gender_title"/>
+        </LinearLayout>
     </LinearLayout>
 
     <Button
@@ -50,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="65dp"
-        android:text="创建账号"
+        android:text="@string/build_account"
         android:textColor="#5c5c5c"
         android:textSize="16sp"
         android:background="@drawable/btn_login_selector"
