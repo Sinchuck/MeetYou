@@ -1,6 +1,5 @@
 package com.example.yang.meetyou;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +27,11 @@ public class ActivityAdapter extends ArrayAdapter<Huodong> {
         Huodong activity = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(listview_item_id,null);
         ImageView kindImage = (ImageView) view.findViewById(R.id.iv_kind);
-        TextView publisherId = (TextView) view.findViewById(R.id.tv_publisher_id);
+//        TextView publisherId = (TextView) view.findViewById(R.id.tv_publisher_id);
         TextView theme = (TextView) view.findViewById(R.id.tv_theme);
         TextView publishTime = (TextView) view.findViewById(R.id.tv_publisher_time);
         kindImage.setImageDrawable(activity.getKind());
-        publisherId.setText(activity.getPublisherId());
+//        publisherId.setText(activity.getPublisherId());
         publishTime.setText(activity.getPublishTime());
         theme.setText(activity.getTheme());
         return view;

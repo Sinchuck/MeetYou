@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -36,6 +40,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     TextView mConcern;
     TextView mPublish;
     TextView mPersonalCenter;
+    Toolbar mToolbar;
 
     private SharedPreferences sp;
 
@@ -43,6 +48,25 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.home_page);
+
+        mToolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+//        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                switch (item.getItemId()) {
+//                    case R.id.search:
+//
+//                        break;
+//                    case R.id.classify_search:
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
+
         activityListView = (ListView) findViewById(R.id.lv_activity);
         mHomePage = (TextView) findViewById(R.id.tv_home_page);
         mConcern = (TextView) findViewById(R.id.tv_concern);
@@ -77,6 +101,27 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(a);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.home_page_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+        return true;
     }
 
     @Override
