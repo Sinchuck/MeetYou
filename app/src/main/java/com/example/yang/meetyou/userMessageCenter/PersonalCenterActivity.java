@@ -1,4 +1,4 @@
-package com.example.yang.meetyou;
+package com.example.yang.meetyou.userMessageCenter;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.ActivityHasPublishedByUserActivity;
+import com.example.yang.meetyou.ConcernActivity;
+import com.example.yang.meetyou.HomePageActivity;
+import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.accounts.LoginActivity;
+import com.example.yang.meetyou.publish.PublishActivity;
 
 /**
  * Created by Yang on 2016/9/25.

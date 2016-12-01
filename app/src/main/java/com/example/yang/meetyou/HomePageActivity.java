@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yang.meetyou.accounts.LoginActivity;
+import com.example.yang.meetyou.publish.PublishActivity;
+import com.example.yang.meetyou.userMessageCenter.PersonalCenterActivity;
 
 import java.util.ArrayList;
 import java.util.List;

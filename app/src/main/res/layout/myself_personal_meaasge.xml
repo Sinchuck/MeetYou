@@ -35,6 +35,7 @@
             />
 
         <ImageView
+            android:id="@+id/iv_head"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_width="60dp"
@@ -59,7 +60,7 @@
             android:layout_height="wrap_content"
             android:text="昵称"
             android:textColor="#000"
-            android:textSize="20sp"/>
+            android:textSize="18sp"/>
         <TextView
             android:layout_toRightOf="@+id/tv_name"
             android:layout_marginLeft="10dp"
@@ -72,7 +73,7 @@
             android:layout_marginBottom="10dp"
             android:layout_alignParentRight="true"
             android:text="我是谁"
-            android:textSize="20sp"/>
+            android:textSize="18sp"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -99,7 +100,7 @@
             android:layout_marginBottom="10dp"
             android:layout_alignParentRight="true"
             android:text="201430614243"
-            android:textSize="20sp"/>
+            android:textSize="18sp"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -118,15 +119,18 @@
             android:text="性别"
             android:textColor="#000"
             android:textSize="20sp"/>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <TextView
+            android:id="@+id/user_sex_tv"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@mipmap/ico_sex_male"
-            />
+            android:gravity="center_vertical"
+            android:text="未知"
+            android:textSize="18sp"/>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -147,7 +151,6 @@
             android:textColor="#000"
             android:textSize="20sp"/>
         <TextView
-            android:layout_toRightOf="@+id/tv_signature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -158,6 +161,6 @@
             android:gravity="right"
             android:text="来单挑啊..."
             android:singleLine="true"
-            android:textSize="20sp"/>
+            android:textSize="18sp"/>
     </RelativeLayout>
-  </RelativeLayout>
+</RelativeLayout>

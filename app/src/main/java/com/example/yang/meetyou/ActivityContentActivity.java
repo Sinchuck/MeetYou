@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.yang.meetyou.userMessageCenter.OthersPersonalMessageActivity;
+
 /**
  * Created by Yang on 2016/9/26.
  */
