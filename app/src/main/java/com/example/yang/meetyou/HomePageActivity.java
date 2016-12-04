@@ -146,15 +146,14 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void showActivityKindDialog() {
-        final String[] items = new String[7];
-        items[0] = "未知";
-        items[1]="体育";
-        items[2]= "手游";
-        items[3]="桌游";
-        items[4]="游戏";
-        items[5]="学习";
-        items[6]="其他";
-        activity_kind = "未知";
+        final String[] items = new String[6];
+        items[0]="体育";
+        items[1]= "手游";
+        items[2]="桌游";
+        items[3]="游戏";
+        items[4]="学习";
+        items[5]="其他";
+        activity_kind = "体育";
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
                     @Override
