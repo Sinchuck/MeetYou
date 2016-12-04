@@ -1,11 +1,7 @@
 package com.example.yang.meetyou;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
-/**
- * Created by Yang on 2016/9/24.
- */
 public class Huodong {
 
     public Drawable kind;

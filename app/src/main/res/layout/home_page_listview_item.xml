@@ -37,7 +37,7 @@
 
         <!--<View-->
             <!--android:layout_width="175dp"-->
-            <!--android:layout_height="30dp"/>-->
+            <!--android:layout_height="30dp"/>
 
         <ImageButton
             android:id="@+id/join"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:paddingRight="5dp"
-            android:background="@drawable/ic_home_page_list"/>
+            android:background="@drawable/ic_home_page_list"/>-->
     </LinearLayout>
 
 
@@ -91,6 +91,7 @@
         <View
             android:layout_width="10dp"
             android:layout_height="20dp"/>
+        <!--
         <TextView
             android:id="@+id/tv_publisher_time"
             android:layout_width="wrap_content"
@@ -99,6 +100,7 @@
             android:gravity="center"
             android:textColor="@color/colorCancel"
             android:text="发布时间"/>
+        -->
 
         <View
             android:layout_width="10dp"
