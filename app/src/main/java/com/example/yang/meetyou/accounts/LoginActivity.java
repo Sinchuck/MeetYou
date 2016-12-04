@@ -99,15 +99,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-//        boolean isRemember = mSharedPreferences.getBoolean("remember_password", false);
-//        if (isRemember) {
-//            String account = mSharedPreferences.getString("account", "");
-//            String password = mSharedPreferences.getString("password", "");
-//            mAccountEt.setText(account);
-//            mPasswordEt.setText(password);
-//            mRememberPasswordCb.setChecked(true);
-//
-//        }
     }
 
     private void clickLogin() {
@@ -146,7 +137,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
     }

@@ -1,20 +1,23 @@
 package com.example.yang.meetyou;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,52 +25,56 @@ import android.widget.Toast;
 import com.example.yang.meetyou.accounts.LoginActivity;
 import com.example.yang.meetyou.publish.PublishActivity;
 import com.example.yang.meetyou.userMessageCenter.PersonalCenterActivity;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Yang on 2016/9/24.
  */
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private static final String TAG = "HomePageActivity";
+
     public static final String FIRST_USE = "first_use";
 
-    ListView activityListView;
+    ListView mListView;
     List<Huodong> mHuodongList = new ArrayList<>();
-    EditText  mEditText;
     TextView mHomePage;
     TextView mConcern;
     TextView mPublish;
     TextView mPersonalCenter;
+
     Toolbar mToolbar;
+
+    String refreshHomePage;
+    String search;
+    String searchWithTag;
+    String activity_kind;
+
+    OkHttpClient mClient = new OkHttpClient();
+    Gson mGson = new Gson();
+
+    private int refreshIndex = -1;
+    int status;
 
     private SharedPreferences sp;
 
     protected void onCreate(@Nullable Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.home_page);
+        setContentView(R.layout.activity_home_page);
 
         mToolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-//        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.search:
-//
-//                        break;
-//                    case R.id.classify_search:
-//                        break;
-//                    default:
-//                        break;
-//                }
-//                return true;
-//            }
-//        });
 
-        activityListView = (ListView) findViewById(R.id.lv_activity);
+        mListView = (ListView) findViewById(R.id.lv_activity);
         mHomePage = (TextView) findViewById(R.id.tv_home_page);
         mConcern = (TextView) findViewById(R.id.tv_concern);
         mPersonalCenter = (TextView) findViewById(R.id.tv_personalCenter);
@@ -83,7 +90,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         mConcern.setOnClickListener(this);
         mPublish.setOnClickListener(this);
         mPersonalCenter.setOnClickListener(this);
-           for(int i =0;i<10;i++) {
+        for(int i =0;i<10;i++) {
             Huodong activity = new Huodong();
             activity.setKind(getResources().getDrawable(R.mipmap.kobi));
             activity.setPublisherId("201430614243");
@@ -92,15 +99,18 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             mHuodongList.add(activity);
         }
 
-        activityListView.setAdapter(new ActivityAdapter(HomePageActivity.this,R.layout.home_page_listview_item, mHuodongList));
+        mListView.setAdapter(new ActivityAdapter(HomePageActivity.this,R.layout.home_page_listview_item, mHuodongList));
 
-        activityListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent a = new Intent(HomePageActivity.this, ActivityContentActivity.class);
                 startActivity(a);
             }
         });
+
+        refreshHomePage = "http://119.29.224.50/meetyou/public/refreshHomePage?refreshIndex=" + refreshIndex;
+        sendTo(refreshHomePage);
     }
 
     @Override
@@ -113,6 +123,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                search = "http://119.29.224.50/meetyou/public/searchForActivityWithKey?search_keywds=" + s;
+                sendTo(search);
                 return true;
             }
 
@@ -121,7 +133,94 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 return false;
             }
         });
+
+        MenuItem downItem = menu.findItem(R.id.classify_search);
+        downItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                showActivityKindDialog();
+                return true;
+            }
+        });
         return true;
+    }
+
+    public void showActivityKindDialog() {
+        final String[] items = new String[7];
+        items[0] = "未知";
+        items[1]="体育";
+        items[2]= "手游";
+        items[3]="桌游";
+        items[4]="游戏";
+        items[5]="学习";
+        items[6]="其他";
+        activity_kind = "未知";
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        activity_kind = items[which];
+                        searchWithTag = "http://119.29.224.50/meetyou/public/searchForActivityWithTag?search_tag="
+                                + activity_kind;
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendTo(searchWithTag);
+                        Toast.makeText(HomePageActivity.this,"确定",Toast.LENGTH_LONG).show();
+                        //TODO: 请求服务端代码
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(HomePageActivity.this,"取消",Toast.LENGTH_LONG).show();
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void sendTo(String ros){
+        RefreshOrSearch myRequest = new RefreshOrSearch();
+        myRequest.refreshOrSearch = ros;
+        myRequest.execute();
+    }
+
+    private class RefreshOrSearch extends AsyncTask<Void, Void, Void> {
+
+        String refreshOrSearch;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            final Request request = new Request.Builder()
+                    .get()
+                    .tag(this)
+                    .url( refreshOrSearch)
+                    .build();
+
+            Response response;
+            try {
+                response = mClient.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    try {
+//                        JSONObject jsonObject = new JSONObject(response.body().string());
+//                        status = jsonObject.getInt("msgCode");
+//                        Log.i(TAG, status + "");
+                        HomePageJson homePageJson = mGson.fromJson(response.body().string(), HomePageJson.class);
+                        Log.i(TAG, homePageJson.toString());
+
+                    } catch (Exception je) {
+                        je.printStackTrace();
+                    }
+                } else {
+                    throw new IOException("Unexpected code " + response);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
     @Override
@@ -144,6 +243,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
     }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -154,5 +254,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public interface PullToRefreshListener {
+        void onRefresh();
     }
 }
