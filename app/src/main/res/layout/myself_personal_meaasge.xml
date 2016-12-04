@@ -62,6 +62,7 @@
             android:textColor="#000"
             android:textSize="18sp"/>
         <TextView
+            android:id="@+id/tv_nickname"
             android:layout_toRightOf="@+id/tv_name"
             android:layout_marginLeft="10dp"
             android:layout_width="match_parent"
@@ -93,6 +94,7 @@
             android:textColor="#000"
             android:textSize="20sp"/>
         <TextView
+            android:id="@+id/tv_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
@@ -120,7 +122,7 @@
             android:textColor="#000"
             android:textSize="20sp"/>
         <TextView
-            android:id="@+id/user_sex_tv"
+            android:id="@+id/tv_user_sex"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
@@ -134,8 +136,41 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rl_signature"
+        android:id="@+id/rl_contact"
         android:layout_below="@+id/rl_sex"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff">
+        <TextView
+            android:id="@+id/tv_contact"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="联系方式"
+            android:textColor="#000"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/tv_user_contact"
+            android:layout_toRightOf="@+id/tv_contact"
+            android:layout_marginLeft="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:gravity="right"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentRight="true"
+            android:text="18888888888"
+            android:textSize="18sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_signature"
+        android:layout_below="@+id/rl_contact"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -151,9 +186,11 @@
             android:textColor="#000"
             android:textSize="20sp"/>
         <TextView
+            android:layout_toRightOf="@+id/tv_signature"
+            android:id="@+id/tv_user_signature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
@@ -162,5 +199,36 @@
             android:text="来单挑啊..."
             android:singleLine="true"
             android:textSize="18sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_user_privacy"
+        android:layout_below="@+id/rl_signature"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff">
+        <TextView
+            android:id="@+id/tv_privacy"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用户信息是否开放"
+            android:gravity="center_vertical"
+            android:textColor="#000"
+            android:textSize="20sp"/>
+        <Button
+            android:id="@+id/bt_privacy"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:text="是"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/bg_select"/>
     </RelativeLayout>
 </RelativeLayout>

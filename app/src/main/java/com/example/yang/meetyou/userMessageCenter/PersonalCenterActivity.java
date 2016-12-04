@@ -2,10 +2,14 @@ package com.example.yang.meetyou.userMessageCenter;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,18 +20,115 @@ import com.example.yang.meetyou.HomePageActivity;
 import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.accounts.LoginActivity;
 import com.example.yang.meetyou.publish.PublishActivity;
+import com.example.yang.meetyou.utils.PreferenceUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Yang on 2016/9/25.
  */
 public class PersonalCenterActivity extends AppCompatActivity implements View.OnClickListener{
-    TextView mHomePage;
-    TextView mConcern;
-    TextView mPublish;
-    TextView mPersonalCenter;
-    LinearLayout mHeadsLinear;
-    TextView mCancelText;
-    TextView mActivityHasPublishedByUserText;
+    private static  final  int SHOW_TOAST = 11;
+    private static final int SET_ACCOUNT =12;
+    private static final int SET_NICKNAME = 13;
+    private static final int SET_HEADS = 14;
+    private static final String TAG = "PersonalCenterActivity";
+
+
+    private TextView mHomePage;
+    private TextView mConcern;
+    private TextView mPublish;
+    private TextView mPersonalCenter;
+    private LinearLayout mHeadsLinear;
+    private TextView mCancelText;
+    private TextView mActivityHasPublishedByUserText;
+
+    private TextView account_tv;
+    private TextView nickname_tv;
+    private ImageView head_iv;
+
+    final OkHttpClient mClient = new OkHttpClient();
+
+
+    private String msg;
+    protected void onStart () {
+        super.onStart();
+        final String account = PreferenceUtil.getString(PersonalCenterActivity.this, PreferenceUtil.ACCOUNT);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String requestURL = " http://119.29.224.50/meetyou/public/userInfo?user_account=" + account;
+
+                final Request request = new Request.Builder()
+                        .get()
+                        .tag(this)
+                        .url(requestURL)
+                        .build();
+
+                Response response;
+                try {
+                    response = mClient.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        try {
+                            String response2 = response.body().string();
+                            JSONObject jsonObject = new JSONObject(response2);
+                            Log.i(TAG, response2);
+                           int  status = jsonObject.getInt("msgCode");
+                            Log.i("123", status + "");
+                            msg = jsonObject.getString("msg");
+                            JSONObject jsonObject1 = jsonObject.getJSONObject("data");
+
+                            if (status == 301) {
+                                handler.obtainMessage(SET_NICKNAME, jsonObject1.getString("user_nickName")).sendToTarget();
+                                handler.obtainMessage(SET_ACCOUNT, jsonObject1.getString("user_account")).sendToTarget();
+                            }else if(status == 302){
+                                handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                            }
+
+                            Log.i("123", msg);
+                        } catch (JSONException je) {
+                            je.printStackTrace();
+                        }
+                    } else {
+                        throw new IOException("Unexpected code " + response);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+    }
+
+
+    public Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SHOW_TOAST:
+                    Toast.makeText(PersonalCenterActivity.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                    break;
+                case SET_NICKNAME:
+                    nickname_tv.setText(msg.obj.toString());
+                    break;
+                case SET_ACCOUNT:
+                    account_tv.setText(msg.obj.toString());
+                    break;
+                case SET_HEADS:
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +140,10 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
         mHeadsLinear = (LinearLayout)findViewById(R.id.linear_personal);
         mCancelText = (TextView) findViewById(R.id.tv_cancel);
         mActivityHasPublishedByUserText = (TextView) findViewById(R.id.tv_activity_has_published_by_user);
+        nickname_tv = (TextView) findViewById(R.id.tv_nickname);
+        account_tv = (TextView) findViewById(R.id.tv_account);
+        head_iv = (ImageView) findViewById(R.id.iv_head);
+
 
         mHomePage.setOnClickListener(this);
         mConcern.setOnClickListener(this);
@@ -72,6 +177,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
                 startActivity(e);
                 break;
             case  R.id.tv_cancel:
+                PreferenceUtil.setString(PersonalCenterActivity.this, PreferenceUtil.ACCOUNT, "");
                 Intent f = new Intent(PersonalCenterActivity.this, LoginActivity.class);
                 startActivity(f);
                 break;

@@ -35,9 +35,10 @@
                     android:id="@+id/tv_activity_kind"
                     android:padding="5dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="55dp"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
-                    android:text="未知"
+                    android:text=""
                     android:textSize="20sp"
                     android:background="@drawable/bg_select"/>
 
@@ -91,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:text="2016.09.30"
+                    android:text="2000-00-00"
                     android:background="@drawable/bg_select"/>
                 <TextView
                     android:layout_marginLeft="20dp"
@@ -105,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:text="10"
+                    android:text="1"
                     android:background="@drawable/bg_select"/>
 
             </LinearLayout>

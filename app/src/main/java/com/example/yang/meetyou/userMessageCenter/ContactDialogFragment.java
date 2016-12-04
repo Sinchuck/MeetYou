@@ -27,21 +27,45 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Yang on 2016/11/19.
+ * Created by Yang on 2016/11/23.
  */
-public class NickNameDialogFragment extends DialogFragment implements View.OnClickListener {
-
+public class ContactDialogFragment extends DialogFragment implements View.OnClickListener {
     private static final int SHOW_TOAST = 11;
-    private static final int CHANGE_NICKNAME = 12;
-    private static final String TAG = "NickNameDialogFragment";
-
+    private static final int CHANGE_CONTACT = 12;
+    private static final String TAG = "ContactDialogFragment";
 
     private TextView cancel_tv;
     private TextView sure_tv;
-    private EditText nickname_edit;
+    private EditText contact_edit;
     private static Context mContext;
 
-    private String nickname;
+    private String contact;
+    public static ContactDialogFragment newInstance(Context context) {
+        mContext = context;
+
+        Bundle args = new Bundle();
+
+        ContactDialogFragment fragment = new ContactDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        View view = inflater.inflate(R.layout.fragment_contact_dialog, container);
+        cancel_tv = (TextView)view.findViewById(R.id.cancel_save_contact_bt);
+        sure_tv = (TextView) view.findViewById(R.id.save_contact_bt);
+        contact_edit = (EditText) view.findViewById(R.id.edit_user_contact);
+
+        cancel_tv.setOnClickListener(this);
+        sure_tv.setOnClickListener(this);
+
+
+        return view;
+    }
+
+
     final OkHttpClient mClient = new OkHttpClient();
     private String msg;
 
@@ -52,60 +76,33 @@ public class NickNameDialogFragment extends DialogFragment implements View.OnCli
                 case SHOW_TOAST:
                     Toast.makeText(mContext,msg.obj.toString(), Toast.LENGTH_SHORT).show();
                     break;
-                case CHANGE_NICKNAME:
-                    MyselfPersonalMessageActivity.nickname_tv.setText(msg.obj.toString());
+                case CHANGE_CONTACT:
+                    if (msg.obj.toString() == null) {
+                        MyselfPersonalMessageActivity.contacts_tv.setText("");
+                        break;
+                    }
+                    MyselfPersonalMessageActivity.contacts_tv.setText(msg.obj.toString());
                     break;
                 default:
                     break;
             }
         }
     };
+    private void saveContact() {
+        contact = contact_edit.getText().toString();
 
-     public static NickNameDialogFragment newInstance(Context context) {
-
-        Bundle args = new Bundle();
-        NickNameDialogFragment fragment = new NickNameDialogFragment();
-        fragment.setArguments(args);
-         mContext = context;
-
-        return fragment;
-    }
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        View view = inflater.inflate(R.layout.fragment_nickname_dialog, container);
-        cancel_tv = (TextView)view.findViewById(R.id.cancel_save_nickname_bt);
-        sure_tv = (TextView) view.findViewById(R.id.save_nickname_bt);
-        nickname_edit = (EditText) view.findViewById(R.id.edit_user_nickname);
-
-        cancel_tv.setOnClickListener(this);
-        sure_tv.setOnClickListener(this);
-
-
-        return view;
-    }
-
-    private void saveNickname() {
-        nickname = nickname_edit.getText().toString();
-        Log.i("147", 13+"");
-        if (nickname.equals("")) {
-
-            handler.obtainMessage(SHOW_TOAST, "昵称不可为空").sendToTarget();
-            return;
-        }
-
-        setNickname();
+        setContact();
 
     }
 
-    private void setNickname() {
+    private void setContact() {
         final String account = PreferenceUtil.getString(getActivity(), PreferenceUtil.ACCOUNT);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                String requestURL = "http://119.29.224.50/meetyou/public/updateUserInfo?operation=NICKNAME&user_account=" + account + "&value=" + nickname;
+                String requestURL = "http://119.29.224.50/meetyou/public/updateUserInfo?operation=CONTACTS&user_account=" + account + "&value=" + contact;
 
                 final Request request = new Request.Builder()
                         .get()
@@ -128,7 +125,7 @@ public class NickNameDialogFragment extends DialogFragment implements View.OnCli
 
                             if (status == 305) {
                                 handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
-                                handler.obtainMessage(CHANGE_NICKNAME, jsonObject1.getString("nickName")).sendToTarget();
+                                handler.obtainMessage(CHANGE_CONTACT, jsonObject1.getString("contacts")).sendToTarget();
                             }else if(status == 306){
                                 handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
                             }
@@ -147,14 +144,13 @@ public class NickNameDialogFragment extends DialogFragment implements View.OnCli
         }).start();
     }
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.cancel_save_nickname_bt:
-
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.cancel_save_contact_bt:
                 this.dismiss();
                 break;
-            case R.id.save_nickname_bt:
-                saveNickname();
+            case R.id.save_contact_bt:
+                saveContact();
                 this.dismiss();
                 break;
         }

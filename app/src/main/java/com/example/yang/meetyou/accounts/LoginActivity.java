@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.yang.meetyou.HomePageActivity;
 import com.example.yang.meetyou.R;
+import com.example.yang.meetyou.utils.PreferenceUtil;
 import com.example.yang.meetyou.utils.RegexUtils;
 import com.example.yang.meetyou.views.CleanEditText;
 
@@ -59,6 +60,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
+
+
+        if (!PreferenceUtil.getString(LoginActivity.this, PreferenceUtil.ACCOUNT).equals("")) {
+            Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+            startActivity(intent);
+            this.finish();
+            return;
+        }
 
         initViews();
 
@@ -198,6 +207,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "用户账号不存在", Toast.LENGTH_SHORT).show();
             } else if (status == 103) {
                 Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                PreferenceUtil.setString(LoginActivity.this, PreferenceUtil.ACCOUNT,account);
                 Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
                 startActivity(intent);
                 finish();

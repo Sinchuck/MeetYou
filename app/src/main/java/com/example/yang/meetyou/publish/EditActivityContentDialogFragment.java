@@ -40,6 +40,9 @@ public class EditActivityContentDialogFragment extends DialogFragment implements
 
     }
 
+    private void saveContent() {
+        PublishActivity.content_et.setText(nickname_edit.getText().toString());
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -47,7 +50,7 @@ public class EditActivityContentDialogFragment extends DialogFragment implements
                 this.dismiss();
                 break;
             case R.id.save_content_bt:
-//                saveNickname();
+                saveContent();
                 this.dismiss();
                 break;
         }

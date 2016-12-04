@@ -8,10 +8,13 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,8 +28,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yang.meetyou.R;
+import com.example.yang.meetyou.utils.PreferenceUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Yang on 2016/9/26.
@@ -36,6 +48,16 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
     private final static int SELET_IN_PHONE = 2;
     private final static int REQUEST_TO_PHOTOCUTED_AND_SEND_TO_SEVER = 3;
     public static final String PICTURE_FILE="MeetYou/heads.jpg";
+    private static final String TAG = "PersonalMessageActivity";
+
+    private static  final  int SHOW_TOAST = 11;
+    private static final int SET_ACCOUNT =12;
+    private static final int SET_NICKNAME = 13;
+    private static final int SET_HEADS = 14;
+    private static final int SET_SEX =15;
+    private static final int SET_CONTACT = 16;
+    private static final int SET_SIGNATURE = 17;
+    private static final int SET_PRIVACY = 18;
 
 
     private TextView mActivityNameTextView;
@@ -45,11 +67,119 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
     private RelativeLayout head_rl;
     private TextView sex_tv;
     private ImageView head_iv;
+    public static TextView nickname_tv;
+    public static TextView account_tv;
+    public static TextView signature_tv;
+    public static TextView contacts_tv;
+    public static Button privacy_bt;
+    private static RelativeLayout  contact_rl;
+    private RelativeLayout privacy_rl;
 
     private String sex ="";
     private PopupWindow mPopWindow;
     private Uri  imageUri;
 
+    final OkHttpClient mClient = new OkHttpClient();
+
+
+    private String msg;
+
+    private int index = 2;
+    private int privacy_index =0;
+
+    protected void getUserMessage () {
+
+        final String account = PreferenceUtil.getString(MyselfPersonalMessageActivity.this, PreferenceUtil.ACCOUNT);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String requestURL = " http://119.29.224.50/meetyou/public/userInfo?user_account=" + account;
+
+                final Request request = new Request.Builder()
+                        .get()
+                        .tag(this)
+                        .url(requestURL)
+                        .build();
+
+                Response response;
+                try {
+                    response = mClient.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        try {
+                            String response2 = response.body().string();
+                            JSONObject jsonObject = new JSONObject(response2);
+                            Log.i(TAG, response2);
+                            int  status = jsonObject.getInt("msgCode");
+                            Log.i("123", status + "");
+                            msg = jsonObject.getString("msg");
+                            JSONObject jsonObject1 = jsonObject.getJSONObject("data");
+
+                            if (status == 301) {
+                                handler.obtainMessage(SET_NICKNAME, jsonObject1.getString("user_nickName")).sendToTarget();
+                                handler.obtainMessage(SET_ACCOUNT, jsonObject1.getString("user_account")).sendToTarget();
+                                handler.obtainMessage(SET_SEX, jsonObject1.getString("user_sex")).sendToTarget();
+                                handler.obtainMessage(SET_CONTACT,jsonObject1.getString("user_contacts")).sendToTarget();
+                                handler.obtainMessage(SET_SIGNATURE, jsonObject1.getString("user_description")).sendToTarget();
+                                handler.obtainMessage(SET_PRIVACY,jsonObject1.getString("user_privacy")).sendToTarget();
+                            }else if(status == 302){
+                                handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                            }
+
+                            Log.i("123", msg);
+                        } catch (JSONException je) {
+                            je.printStackTrace();
+                        }
+                    } else {
+                        throw new IOException("Unexpected code " + response);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+    }
+
+
+    public Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SHOW_TOAST:
+                    Toast.makeText(MyselfPersonalMessageActivity.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                    break;
+                case SET_NICKNAME:
+                    nickname_tv.setText(msg.obj.toString());
+                    break;
+                case SET_ACCOUNT:
+                    account_tv.setText(msg.obj.toString());
+                    break;
+                case SET_SEX:
+                    sex_tv.setText(msg.obj.toString());
+                    break;
+                case SET_CONTACT:
+                    contacts_tv.setText(msg.obj.toString());
+                    break;
+                case SET_SIGNATURE:
+                    signature_tv.setText(msg.obj.toString());
+                    break;
+                case SET_PRIVACY:
+                    if (msg.obj.toString().equals("0")) {
+                        privacy_bt.setText("是");
+                    }else{
+                        privacy_bt.setText("否");
+                    }
+                    break;
+
+
+                case SET_HEADS:
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,14 +188,23 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         mActivityNameTextView = (TextView) findViewById(R.id.tv_activity_name);
         nickname_rl = (RelativeLayout) findViewById(R.id.rl_name);
         sex_rl = (RelativeLayout) findViewById(R.id.rl_sex);
-        sex_tv = (TextView) findViewById(R.id.user_sex_tv);
         signature_rl = (RelativeLayout) findViewById(R.id.rl_signature);
         head_rl = (RelativeLayout) findViewById(R.id.rl_head);
-        head_iv = (ImageView) findViewById(R.id.iv_head);
+        privacy_rl = (RelativeLayout) findViewById(R.id.rl_user_privacy);
 
-//        String path = Environment.getExternalStorageDirectory().getPath() + "/" + PICTURE_FILE;
-//        Log.i("147258", path);
-//        File file = new File(path);
+        head_iv = (ImageView) findViewById(R.id.iv_head);
+        contact_rl = (RelativeLayout) findViewById(R.id.rl_contact);
+        nickname_tv = (TextView) findViewById(R.id.tv_nickname);
+        account_tv = (TextView) findViewById(R.id.tv_account);
+        sex_tv = (TextView) findViewById(R.id.tv_user_sex);
+        contacts_tv =(TextView)findViewById(R.id.tv_user_contact);
+        signature_tv = (TextView) findViewById(R.id.tv_user_signature);
+        privacy_bt = (Button) findViewById(R.id.bt_privacy);
+
+
+
+        getUserMessage();
+
         File tmpDir = new File(Environment.getExternalStorageDirectory()+ "/picture.");
         if(!tmpDir.exists())
         {
@@ -75,10 +214,12 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         imageUri = Uri.fromFile(realImg);
 
 
+        privacy_rl.setOnClickListener(this);
         nickname_rl.setOnClickListener(this);
         sex_rl.setOnClickListener(this);
         signature_rl.setOnClickListener(this);
         head_rl.setOnClickListener(this);
+        contact_rl.setOnClickListener(this);
         mActivityNameTextView.setText("个人详细信息");
     }
 
@@ -88,19 +229,59 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         items[1]="女";
         items[2]= "未知";
         sex = "未知";
+        index = 2;
         AlertDialog.Builder builder = new AlertDialog.Builder(MyselfPersonalMessageActivity.this)
                 .setTitle("你的性别是？")
                 .setSingleChoiceItems(items, 2, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         sex = items[which];
+                        index = which;
                     }
                 })
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(MyselfPersonalMessageActivity.this,"确定",Toast.LENGTH_LONG).show();
-                        sex_tv.setText(sex);
+                        final String account = PreferenceUtil.getString(MyselfPersonalMessageActivity.this, PreferenceUtil.ACCOUNT);
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String requestURL = "http://119.29.224.50/meetyou/public/updateUserInfo?operation=SEX&user_account="+account+"&value="+index;
+
+                                final Request request = new Request.Builder()
+                                        .get()
+                                        .tag(this)
+                                        .url(requestURL)
+                                        .build();
+
+                                Response response;
+                                try {
+                                    response = mClient.newCall(request).execute();
+                                    if (response.isSuccessful()) {
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(response.body().string());
+//                                            Log.i(TAG, response.body().string());
+                                            int  status = jsonObject.getInt("msgCode");
+                                            if (status == 305) {
+                                                handler.obtainMessage(SHOW_TOAST, jsonObject.getString("msg")).sendToTarget();
+                                                handler.obtainMessage(SET_SEX, jsonObject.getJSONObject("data").getString("sex")).sendToTarget();
+
+                                            }else{
+                                                handler.obtainMessage(SHOW_TOAST, jsonObject.getString("msg")).sendToTarget();
+                                            }
+                                        } catch (JSONException je) {
+                                            je.printStackTrace();
+                                        }
+                                    } else {
+                                        throw new IOException("Unexpected code " + response);
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        thread.start();
+
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -149,6 +330,51 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         startActivityForResult(intent, REQUEST_TO_PHOTOCUTED_AND_SEND_TO_SEVER);
     }
 
+    private void sendPrivacy() {
+        if (privacy_bt.getText().toString().equals("是")) {
+            privacy_index = 1;
+        }else {
+            privacy_index = 0;
+        }
+        final String account = PreferenceUtil.getString(MyselfPersonalMessageActivity.this, PreferenceUtil.ACCOUNT);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String requestURL = "http://119.29.224.50/meetyou/public/changePrivacy?user_account="+account+"&user_privacy=+"+privacy_index;
+
+                final Request request = new Request.Builder()
+                        .get()
+                        .tag(this)
+                        .url(requestURL)
+                        .build();
+
+                Response response;
+                try {
+                    response = mClient.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response.body().string());
+//                                            Log.i(TAG, response.body().string());
+                            int  status = jsonObject.getInt("msgCode");
+                            if (status == 307) {
+                                handler.obtainMessage(SHOW_TOAST, jsonObject.getString("msg")).sendToTarget();
+                                handler.obtainMessage(SET_PRIVACY, jsonObject.getJSONObject("data").getInt("privacy")).sendToTarget();
+                            }else{
+                                handler.obtainMessage(SHOW_TOAST, jsonObject.getString("msg")).sendToTarget();
+                            }
+                        } catch (JSONException je) {
+                            je.printStackTrace();
+                        }
+                    } else {
+                        throw new IOException("Unexpected code " + response);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -179,6 +405,13 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
                 local.setType("image/*");
                 local.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(local, SELET_IN_PHONE);
+                break;
+            case R.id.rl_contact:
+                ContactDialogFragment contactDialogFragment = ContactDialogFragment.newInstance(MyselfPersonalMessageActivity.this);
+                contactDialogFragment.show(this.getSupportFragmentManager(), "ContactDialogFragment");
+                break;
+            case R.id.rl_user_privacy:
+                sendPrivacy();
                 break;
         }
     }

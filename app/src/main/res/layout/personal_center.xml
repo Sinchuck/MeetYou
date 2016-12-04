@@ -19,6 +19,7 @@
         android:orientation="horizontal"
         android:background="#fff">
         <ImageView
+            android:id="@+id/iv_head"
             android:layout_marginLeft="10dp"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -29,10 +30,11 @@
             android:layout_height="80dp"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/tv_nickname"
                 android:paddingTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:text="我是谁"
+                android:text=""
                 android:singleLine="true"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
@@ -51,9 +53,10 @@
                    android:textColor="@color/colorId"
                    />
                <TextView
+                   android:id="@+id/tv_account"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:text="201430614243"
+                   android:text=""
                    android:textSize="14sp"
                    android:layout_gravity="center"
                    android:textColor="@color/colorId"/>
@@ -61,11 +64,6 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center_vertical"
-            android:src="@mipmap/ico_sex_male"/>
     </LinearLayout>
     
     <TextView

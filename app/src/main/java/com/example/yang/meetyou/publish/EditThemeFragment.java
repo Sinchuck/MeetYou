@@ -41,6 +41,9 @@ public class EditThemeFragment extends DialogFragment implements View.OnClickLis
 
     }
 
+    private void saveTheme() {
+        PublishActivity.theme_et .setText(nickname_edit.getText().toString());
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -48,7 +51,7 @@ public class EditThemeFragment extends DialogFragment implements View.OnClickLis
                 this.dismiss();
                 break;
             case R.id.save_theme_bt:
-//                saveNickname();
+                saveTheme();
                 this.dismiss();
                 break;
         }
