@@ -41,8 +41,10 @@ import okhttp3.Response;
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = "HomePageActivity";
-
     public static final String FIRST_USE = "first_use";
+    private static final int REFRESH_HOME_PAGE = 1;
+    private static final int SEARCH_WITH_TAG = 2;
+    private static final int SEARCH_WITHOUT_TAG = 3;
 
     ListView mListView;
     List<Huodong> mHuodongList = new ArrayList<>();
@@ -57,15 +59,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     String search;
     String searchWithTag;
     String activity_kind;
-    private String userAccount;
-    private String userImage;
-    private String userNickName;
-    private String activityId;
-    private String tagId;
-    private String activityTheme;
-    private String activityTime;
-    private String participantCount;
-    private String maxCount;
 
     OkHttpClient mClient = new OkHttpClient();
     Gson mGson = new Gson();
@@ -99,31 +92,21 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         mConcern.setOnClickListener(this);
         mPublish.setOnClickListener(this);
         mPersonalCenter.setOnClickListener(this);
-//        for(int i =0;i<10;i++) {
-//            Huodong activity = new Huodong();
-//            activity.setUserImage(userImage);
-//            activity.setUserNickName(userNickName);
-//            activity.setActivityTheme(activityTheme);
-//            activity.setTagId(tagId);
-//            activity.setActivityTime(activityTime);
-//            activity.setParticipantCount(participantCount);
-//            activity.setMaxCount(maxCount);
-//
-//            mHuodongList.add(activity);
-//        }
-
-//        mListView.setAdapter(new ActivityAdapter(HomePageActivity.this,R.layout.home_page_listview_item, mHuodongList));
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.i("ACTIVITY_ID", mHuodongList.get(i).getActivityId());
+                Bundle bundle = new Bundle();
+                bundle.putString("activityId", mHuodongList.get(i).getActivityId());
                 Intent a = new Intent(HomePageActivity.this, ActivityContentActivity.class);
+                a.putExtras(bundle);
                 startActivity(a);
             }
         });
 
         refreshHomePage = "http://119.29.224.50/meetyou/public/refreshHomePage?refreshIndex=" + refreshIndex;
-        sendTo(refreshHomePage);
+        sendTo(refreshHomePage, REFRESH_HOME_PAGE);
     }
 
     @Override
@@ -137,7 +120,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public boolean onQueryTextSubmit(String s) {
                 search = "http://119.29.224.50/meetyou/public/searchForActivityWithKey?search_keywds=" + s;
-                sendTo(search);
+                sendTo(search, SEARCH_WITHOUT_TAG);
                 return true;
             }
 
@@ -172,14 +155,15 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         activity_kind = items[which];
+                        int kind = which+1;
                         searchWithTag = "http://119.29.224.50/meetyou/public/searchForActivityWithTag?search_tag="
-                                + activity_kind;
+                                + kind;
                     }
                 })
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        sendTo(searchWithTag);
+                        sendTo(searchWithTag, SEARCH_WITH_TAG);
                         Toast.makeText(HomePageActivity.this,"确定",Toast.LENGTH_LONG).show();
                         //TODO: 请求服务端代码
                     }
@@ -193,8 +177,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         builder.create().show();
     }
 
-    private void sendTo(String ros){
-        RefreshOrSearch myRequest = new RefreshOrSearch();
+    private void sendTo(String ros, int which){
+        RefreshOrSearch myRequest = new RefreshOrSearch(which);
         myRequest.refreshOrSearch = ros;
         myRequest.execute();
     }
@@ -203,16 +187,19 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
         String refreshOrSearch;
 
+        int which;
+
+        public RefreshOrSearch(int which) {
+            this.which = which;
+        }
+
         @Override
         protected List<Huodong> doInBackground(String... params) {
-
-            String huodongString;
-            Huodong huodong;
 
             final Request request = new Request.Builder()
                     .get()
                     .tag(this)
-                    .url( refreshOrSearch)
+                    .url(refreshOrSearch)
                     .build();
 
             Response response;
@@ -220,23 +207,19 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 response = mClient.newCall(request).execute();
                 if (response.isSuccessful()) {
                     try {
-//                        JSONObject jsonObject = new JSONObject(response.body().string());
-//                        status = jsonObject.getInt("msgCode");
-//                        Log.i(TAG, status + "");
-                        HomePageJson homePageJson = mGson.fromJson(response.body().string(),
-                                HomePageJson.class);
-                        mHuodongList = homePageJson.getData();
-//                        for (int i = 0; i < huodongs.size(); i++) {
-//                            huodong = new Huodong();
-//                            huodong.setUserNickName(huodongs.get(i).getUserNickName());
-//                            huodong.setTagId(huodongs.get(i).getTagId());
-//                            huodong.setActivityTheme(huodongs.get(i).getActivityTheme());
-//                            huodong.setActivityTime(huodongs.get(i).getActivityTime());
-//                            huodong.setParticipantCount(huodongs.get(i).getParticipantCount());
-//                            huodong.setMaxCount(huodongs.get(i).getMaxCount());
-//                        }
-                        Log.i(TAG, homePageJson.toString());
-                        Log.i(TAG, mHuodongList.toString());
+                        if (which == 1) {
+                            HomePageJson homePageJson = mGson.fromJson(response.body().string(),
+                                    HomePageJson.class);
+                            mHuodongList = homePageJson.getData();
+                            Log.i(TAG, homePageJson.toString());
+                            Log.i(TAG, mHuodongList.toString());
+                        } else if (which == 2 || which == 3) {
+                            SearchJson searchJson = mGson.fromJson(response.body().string(),
+                                    SearchJson.class);
+                            mHuodongList = searchJson.getData();
+                            Log.i(TAG, searchJson.toString());
+                            Log.i(TAG, mHuodongList.toString());
+                        }
 
                     } catch (Exception je) {
                         je.printStackTrace();
@@ -290,9 +273,5 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    public interface PullToRefreshListener {
-        void onRefresh();
     }
 }

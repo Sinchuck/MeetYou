@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
         <ImageView
+            android:id="@+id/content_releaser_head"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_width="60dp"
@@ -36,6 +37,7 @@
         android:layout_height="80dp"
         android:orientation="vertical">
         <TextView
+            android:id="@+id/content_user_nickname"
             android:paddingTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
@@ -58,6 +60,7 @@
                 android:textColor="@color/colorId"
                 />
             <TextView
+                android:id="@+id/content_user_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="201430614243"
@@ -71,6 +74,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/content_activity_tag"
             android:padding="10dp"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
@@ -101,6 +105,7 @@
             android:textSize="20sp"
             />
         <TextView
+            android:id="@+id/content_activity_theme"
             android:padding="10dp"
             android:layout_marginLeft="10dp"
             android:layout_width="match_parent"
@@ -122,9 +127,10 @@
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="时间:"
+            android:text="活动时间:"
             android:textSize="20sp"/>
         <TextView
+            android:id="@+id/content_activity_time"
             android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -138,6 +144,7 @@
             android:text="人数:"
             android:textSize="20sp"/>
         <TextView
+            android:id="@+id/content_max_number"
             android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -157,6 +164,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/content_activity_details"
             android:background="@drawable/bg_content_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
