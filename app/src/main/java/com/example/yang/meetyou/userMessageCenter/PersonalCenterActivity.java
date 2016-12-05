@@ -69,7 +69,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String requestURL = " http://119.29.224.50/meetyou/public/userInfo?user_account=" + account;
+                String requestURL = " http://139.199.180.51/meetyou/public/userInfo?user_account=" + account;
 
                 final Request request = new Request.Builder()
                         .get()

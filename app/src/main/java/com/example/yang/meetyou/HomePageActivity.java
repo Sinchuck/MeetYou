@@ -105,7 +105,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-        refreshHomePage = "http://119.29.224.50/meetyou/public/refreshHomePage?refreshIndex=" + refreshIndex;
+        refreshHomePage = "http://139.199.180.51/meetyou/public/refreshHomePage?refreshIndex=" + refreshIndex;
         sendTo(refreshHomePage, REFRESH_HOME_PAGE);
     }
 
@@ -119,7 +119,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                search = "http://119.29.224.50/meetyou/public/searchForActivityWithKey?search_keywds=" + s;
+                search = "http://139.199.180.51/meetyou/public/searchForActivityWithKey?search_keywds=" + s;
                 sendTo(search, SEARCH_WITHOUT_TAG);
                 return true;
             }
@@ -150,13 +150,16 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         items[4]="学习";
         items[5]="其他";
         activity_kind = "体育";
+        searchWithTag = "http://139.199.180.51/meetyou/public/searchForActivityWithTag?search_tag="
+                + 1;
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         activity_kind = items[which];
+
                         int kind = which+1;
-                        searchWithTag = "http://119.29.224.50/meetyou/public/searchForActivityWithTag?search_tag="
+                        searchWithTag = "http://139.199.180.51/meetyou/public/searchForActivityWithTag?search_tag="
                                 + kind;
                     }
                 })

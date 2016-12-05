@@ -23,6 +23,7 @@ import java.util.List;
  * Created by Yang on 2016/9/25.
  */
 public class ConcernActivity extends AppCompatActivity implements View.OnClickListener {
+
     ListView mActivityListView;
     ListView mFriendListView;
     List<Huodong> mHuodongList = new ArrayList<>();
@@ -95,7 +96,7 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
         switch (view.getId()) {
             case R.id.tv_concernActivity:
                 mFriendListView.setVisibility(view.GONE);
-               mActivityListView.setVisibility(View.VISIBLE);
+                mActivityListView.setVisibility(View.VISIBLE);
                 tv_concernActivity.setTextColor(Color.rgb(34,144, 175));
                 tv_concernFriend.setTextColor(Color.rgb(82, 71, 71));
 
@@ -138,6 +139,5 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    }
+}
 

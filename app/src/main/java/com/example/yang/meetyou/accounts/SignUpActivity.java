@@ -121,9 +121,7 @@ implements AdapterView.OnItemSelectedListener {
     }
 
     private int genderNumber(int pos) {
-        if (pos == 0)
-            return 1;
-        return 0;
+        return pos;
     }
 
     private boolean checkInfo(String account, String password, String nickname) {
@@ -152,7 +150,7 @@ implements AdapterView.OnItemSelectedListener {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            String requestURL = "http://119.29.224.50/meetyou/public/register?user_account=" + account
+            String requestURL = "http://139.199.180.51/meetyou/public/register?user_account=" + account
                     + "&user_passwd=" + password + "&user_nickName=" + nickname
                     +"&user_sex=" + gender + "&user_contacts=" + phoneNumber;
 
