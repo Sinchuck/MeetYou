@@ -126,15 +126,9 @@ public class LoginActivity extends AppCompatActivity {
         password = mPasswordEt.getText().toString().trim();
 
         if (checkInput(account, password)) {
-
-//            if (mRememberPasswordCb.isSelected()) {
                 mEditor = mSharedPreferences.edit();
                 mEditor.putBoolean(HomePageActivity.FIRST_USE, false);
-//                mEditor.putBoolean("remember_password", true);
-//                mEditor.putString("account", account);
-//                mEditor.putString("password", password);
                 mEditor.commit();
-//            }
 
             new GetStatus().execute();
         }
@@ -172,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            String requestURL = "http://119.29.224.50/meetyou/public/login?user_account=" + account
+            String requestURL = "http://139.199.180.51/meetyou/public/login?user_account=" + account
                     + "&user_passwd=" + password;
 
             final Request request = new Request.Builder()

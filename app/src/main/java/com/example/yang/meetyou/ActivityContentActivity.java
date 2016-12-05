@@ -76,7 +76,7 @@ public class ActivityContentActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         activityId = bundle.getString("activityId");
-        huodongDetails = "http://119.29.224.50/meetyou/public/activityInfo?activity_id=" + activityId;
+        huodongDetails = "http://139.199.180.51/meetyou/public/activityInfo?activity_id=" + activityId;
 
         new GetActivityData().execute();
     }

@@ -97,7 +97,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String requestURL = " http://119.29.224.50/meetyou/public/userInfo?user_account=" + account;
+                String requestURL = " http://139.199.180.51/meetyou/public/userInfo?user_account=" + account;
 
                 final Request request = new Request.Builder()
                         .get()
@@ -251,7 +251,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
                         Thread thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                String requestURL = "http://119.29.224.50/meetyou/public/updateUserInfo?operation=SEX&user_account="+account+"&value="+index;
+                                String requestURL = "http://139.199.180.51/meetyou/public/updateUserInfo?operation=SEX&user_account="+account+"&value="+index;
 
                                 final Request request = new Request.Builder()
                                         .get()
@@ -345,7 +345,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                String requestURL = "http://119.29.224.50/meetyou/public/changePrivacy?user_account="+account+"&user_privacy=+"+privacy_index;
+                String requestURL = "http://139.199.180.51/meetyou/public/changePrivacy?user_account="+account+"&user_privacy=+"+privacy_index;
 
                 final Request request = new Request.Builder()
                         .get()
@@ -455,7 +455,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
 
                     try {
                        File file = new File(imageUri.getPath());
-                        OkHttpClientManager.postAsyn("http://119.29.224.50/meetyou/public/uploadImage",//
+                        OkHttpClientManager.postAsyn("http://139.199.180.51/meetyou/public/uploadImage",//
                                 new OkHttpClientManager.ResultCallback<String>()
                                 {
                                     @Override
