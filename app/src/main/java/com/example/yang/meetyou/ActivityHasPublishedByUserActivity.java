@@ -30,10 +30,10 @@ public class ActivityHasPublishedByUserActivity extends AppCompatActivity {
         mActivityHasPublishedListView = (ListView) findViewById(R.id.lv_activity_has_published_by_user);
         for (int i = 0; i < 10; i++) {
             Huodong activity = new Huodong();
-            activity.setKind(getResources().getDrawable(R.mipmap.kobi));
-            activity.setPublisherId("201430614243");
-            activity.setPublishTime("2016.09.30");
-            activity.setTheme("C10约球的走起");
+//            activity.setKind(getResources().getDrawable(R.mipmap.kobi));
+//            activity.setPublisherId("201430614243");
+//            activity.setPublishTime("2016.09.30");
+//            activity.setTheme("C10约球的走起");
             mHuodongHasPublishedList.add(activity);
         }
         mActivityHasPublishedListView.setAdapter(new ActivityAdapter

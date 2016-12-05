@@ -1,45 +1,101 @@
 package com.example.yang.meetyou;
 
-import android.graphics.drawable.Drawable;
-
 public class Huodong {
 
-    public Drawable kind;
-    public String publisherId;
-    public String theme;
-    public String publishTime;
+    private String userAccount;
+    private String userImage;
+    private String userNickName;
+    private String activityId;
+    private String tagId;
+    private String activityTheme;
+    private String activityTime;
+    private String participantCount;
+    private String maxCount;
 
-    public String getPublisherId() {
-        return publisherId;
-    }
+    public String getUserAccount() {
+        return userAccount;
+        }
 
-    public void setPublisherId(String publisherId) {
-        this.publisherId = publisherId;
-    }
+    public void setUserAccount(String userAccount) {
+        this.userAccount = userAccount;
+        }
 
-    public Drawable getKind() {
-        return kind;
-    }
+    public String getUserImage() {
+        return userImage;
+        }
 
-    public void setKind(Drawable kind) {
-        this.kind = kind;
-    }
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+        }
 
-    public String getTheme() {
-        return theme;
-    }
+    public String getUserNickName() {
+        return userNickName;
+        }
 
-    public void setTheme(String theme) {
-        this.theme = theme;
-    }
+    public void setUserNickName(String userNickName) {
+        this.userNickName = userNickName;
+        }
 
-    public String getPublishTime() {
-        return publishTime;
-    }
+    public String getActivityId() {
+        return activityId;
+        }
 
-    public void setPublishTime(String publishTime) {
-        this.publishTime = publishTime;
-    }
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+        }
 
+    public String getTagId() {
+        return tagId;
+        }
 
+    public void setTagId(String tagId) {
+        this.tagId = tagId;
+        }
+
+    public String getActivityTheme() {
+        return activityTheme;
+        }
+
+    public void setActivityTheme(String activityTheme) {
+        this.activityTheme = activityTheme;
+        }
+
+    public String getActivityTime() {
+        return activityTime;
+        }
+
+    public void setActivityTime(String activityTime) {
+        this.activityTime = activityTime;
+        }
+
+    public String getParticipantCount() {
+        return participantCount;
+        }
+
+    public void setParticipantCount(String participantCount) {
+        this.participantCount = participantCount;
+        }
+
+    public String getMaxCount() {
+        return maxCount;
+        }
+
+    public void setMaxCount(String maxCount) {
+        this.maxCount = maxCount;
+        }
+
+@Override
+public String toString() {
+        return "{" +
+        "userAccount='" + userAccount + '\'' +
+        ", userImage='" + userImage + '\'' +
+        ", userNickName='" + userNickName + '\'' +
+        ", activityId='" + activityId + '\'' +
+        ", tagId='" + tagId + '\'' +
+        ", activityTheme='" + activityTheme + '\'' +
+        ", activityTime='" + activityTime + '\'' +
+        ", participantCount='" + participantCount + '\'' +
+        ", maxCount='" + maxCount + '\'' +
+        '}';
+        }
 }

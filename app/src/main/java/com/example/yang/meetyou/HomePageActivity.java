@@ -57,6 +57,15 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     String search;
     String searchWithTag;
     String activity_kind;
+    private String userAccount;
+    private String userImage;
+    private String userNickName;
+    private String activityId;
+    private String tagId;
+    private String activityTheme;
+    private String activityTime;
+    private String participantCount;
+    private String maxCount;
 
     OkHttpClient mClient = new OkHttpClient();
     Gson mGson = new Gson();
@@ -90,16 +99,20 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         mConcern.setOnClickListener(this);
         mPublish.setOnClickListener(this);
         mPersonalCenter.setOnClickListener(this);
-        for(int i =0;i<10;i++) {
-            Huodong activity = new Huodong();
-            activity.setKind(getResources().getDrawable(R.mipmap.kobi));
-            activity.setPublisherId("201430614243");
-            activity.setPublishTime("2016.09.30");
-            activity.setTheme("C10约球的走起");
-            mHuodongList.add(activity);
-        }
+//        for(int i =0;i<10;i++) {
+//            Huodong activity = new Huodong();
+//            activity.setUserImage(userImage);
+//            activity.setUserNickName(userNickName);
+//            activity.setActivityTheme(activityTheme);
+//            activity.setTagId(tagId);
+//            activity.setActivityTime(activityTime);
+//            activity.setParticipantCount(participantCount);
+//            activity.setMaxCount(maxCount);
+//
+//            mHuodongList.add(activity);
+//        }
 
-        mListView.setAdapter(new ActivityAdapter(HomePageActivity.this,R.layout.home_page_listview_item, mHuodongList));
+//        mListView.setAdapter(new ActivityAdapter(HomePageActivity.this,R.layout.home_page_listview_item, mHuodongList));
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -187,12 +200,16 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         myRequest.execute();
     }
 
-    private class RefreshOrSearch extends AsyncTask<Void, Void, Void> {
+    private class RefreshOrSearch extends AsyncTask<String, Void, List<Huodong>> {
 
         String refreshOrSearch;
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected List<Huodong> doInBackground(String... params) {
+
+            String huodongString;
+            Huodong huodong;
+
             final Request request = new Request.Builder()
                     .get()
                     .tag(this)
@@ -207,8 +224,20 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 //                        JSONObject jsonObject = new JSONObject(response.body().string());
 //                        status = jsonObject.getInt("msgCode");
 //                        Log.i(TAG, status + "");
-                        HomePageJson homePageJson = mGson.fromJson(response.body().string(), HomePageJson.class);
+                        HomePageJson homePageJson = mGson.fromJson(response.body().string(),
+                                HomePageJson.class);
+                        mHuodongList = homePageJson.getData();
+//                        for (int i = 0; i < huodongs.size(); i++) {
+//                            huodong = new Huodong();
+//                            huodong.setUserNickName(huodongs.get(i).getUserNickName());
+//                            huodong.setTagId(huodongs.get(i).getTagId());
+//                            huodong.setActivityTheme(huodongs.get(i).getActivityTheme());
+//                            huodong.setActivityTime(huodongs.get(i).getActivityTime());
+//                            huodong.setParticipantCount(huodongs.get(i).getParticipantCount());
+//                            huodong.setMaxCount(huodongs.get(i).getMaxCount());
+//                        }
                         Log.i(TAG, homePageJson.toString());
+                        Log.i(TAG, mHuodongList.toString());
 
                     } catch (Exception je) {
                         je.printStackTrace();
@@ -219,7 +248,15 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return null;
+            return mHuodongList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Huodong> huodongs) {
+            super.onPostExecute(huodongs);
+
+            HomePageAdapter adapter = new HomePageAdapter(HomePageActivity.this, huodongs);
+            mListView.setAdapter(adapter);
         }
     }
 
