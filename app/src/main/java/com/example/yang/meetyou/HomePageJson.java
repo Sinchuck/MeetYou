@@ -12,7 +12,7 @@ public class HomePageJson {
     private String msg;
     private int refreshIndex;
 
-    private List<BriefInformation> data;
+    private List<Huodong> data;
 
     public int getMsgCode() {
         return msgCode;
@@ -38,11 +38,11 @@ public class HomePageJson {
         this.refreshIndex = refreshIndex;
     }
 
-    public List<BriefInformation> getData() {
+    public List<Huodong> getData() {
         return data;
     }
 
-    public void setData(List<BriefInformation> data) {
+    public void setData(List<Huodong> data) {
         this.data = data;
     }
 
