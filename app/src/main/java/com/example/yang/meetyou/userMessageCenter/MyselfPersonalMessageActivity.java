@@ -452,37 +452,37 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
 //                    File targetFile = new File(Environment.getExternalStorageDirectory().getPath() + "/" + PICTURE_FILE);
 //                    Bitmap q = BitmapFactory.decodeFile(targetFile.getPath());
 
+                    String account = PreferenceUtil.getString(MyselfPersonalMessageActivity.this, PreferenceUtil.ACCOUNT);
 
                     try {
                        File file = new File(imageUri.getPath());
                         OkHttpClientManager.postAsyn("http://139.199.180.51/meetyou/public/uploadImage",//
-                                new OkHttpClientManager.ResultCallback<String>()
-                                {
+                                new OkHttpClientManager.ResultCallback<String>() {
                                     @Override
                                     public void onError(com.squareup.okhttp.Request request, Exception e) {
 
                                     }
+
                                     @Override
-                                    public void onResponse(String result)
-                                    {
-                                                try {
-                                                    Log.i("123", result);
-                                                    JSONObject jsonObject = new JSONObject(result);
-                                                    int status = jsonObject.getInt("msgCode");
-                                                    Log.i("123", status + "");
-                                                    msg = jsonObject.getString("msg");
-                                                    Log.i("123", msg);
-                                                    String url = jsonObject.getJSONObject("data").getString("headPic");
-                                                    new DownloadImageTask().execute(url);
-                                                } catch (JSONException je) {
-                                                    je.printStackTrace();
-                                                }
+                                    public void onResponse(String result) {
+                                        try {
+                                            Log.i("123", result);
+                                            JSONObject jsonObject = new JSONObject(result);
+                                            int status = jsonObject.getInt("msgCode");
+                                            Log.i("123", status + "");
+                                            msg = jsonObject.getString("msg");
+                                            Log.i("123", msg);
+                                            String url = jsonObject.getJSONObject("data").getString("headPic");
+                                            new DownloadImageTask().execute(url);
+                                        } catch (JSONException je) {
+                                            je.printStackTrace();
+                                        }
                                     }
                                 },//
                                 file,//
                                 "file",//
                                 new OkHttpClientManager.Param[]{
-                                        new OkHttpClientManager.Param("user_account", "201430614243")}
+                                        new OkHttpClientManager.Param("user_account", account)}
                         );
                     } catch (Exception io) {
                         io.printStackTrace();
