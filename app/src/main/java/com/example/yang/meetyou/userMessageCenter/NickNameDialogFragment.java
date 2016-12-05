@@ -89,7 +89,6 @@ public class NickNameDialogFragment extends DialogFragment implements View.OnCli
         nickname = nickname_edit.getText().toString();
         Log.i("147", 13+"");
         if (nickname.equals("")) {
-
             handler.obtainMessage(SHOW_TOAST, "昵称不可为空").sendToTarget();
             return;
         }

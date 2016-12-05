@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yang.meetyou.R;
+import com.example.yang.meetyou.utils.OkHttpClientManager;
 import com.example.yang.meetyou.utils.PreferenceUtil;
 
 import org.json.JSONException;
@@ -35,6 +37,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -116,6 +119,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
                             JSONObject jsonObject1 = jsonObject.getJSONObject("data");
 
                             if (status == 301) {
+                                handler.obtainMessage(SET_HEADS, jsonObject1.getString("user_image")).sendToTarget();
                                 handler.obtainMessage(SET_NICKNAME, jsonObject1.getString("user_nickName")).sendToTarget();
                                 handler.obtainMessage(SET_ACCOUNT, jsonObject1.getString("user_account")).sendToTarget();
                                 handler.obtainMessage(SET_SEX, jsonObject1.getString("user_sex")).sendToTarget();
@@ -173,6 +177,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
 
 
                 case SET_HEADS:
+                    new DownloadImageTask().execute(msg.obj.toString());
                     break;
 
                 default:
@@ -321,12 +326,12 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         intent.putExtra("crop", "true");
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
-        intent.putExtra("outputX",180 );
-        intent.putExtra("outputY", 180);
+        intent.putExtra("outputX",100 );
+        intent.putExtra("outputY", 100);
         intent.putExtra("outputFormat",  Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true);
         intent.putExtra("return-data", true);
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, REQUEST_TO_PHOTOCUTED_AND_SEND_TO_SEVER);
     }
 
@@ -436,33 +441,6 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
                     Bitmap b = BitmapFactory.decodeFile(imageUri.getPath());
                     Uri uriCapture = Uri.parse(MediaStore.Images.Media.insertImage(this.getContentResolver(), b, null,null));
                     cutImage(uriCapture);
-
-//                    if(data == null)
-//                    {
-//                        return;
-//                    }else{
-//                        Bundle cameraBundle = data.getExtras();
-//                        if(cameraBundle!=null){
-//                            Bitmap cameraBitmap = cameraBundle.getParcelable("data");
-//                            File tmpDir = new File(Environment.getExternalStorageDirectory()+ "/picture.");
-//                            if(!tmpDir.exists())
-//                            {
-//                                tmpDir.mkdir();
-//                            }
-//                            File realImg = new File(tmpDir.getAbsolutePath() + "avater2.jpg");
-//                            try {
-//                                FileOutputStream fos = new FileOutputStream(realImg);
-//                                cameraBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos);
-//                                fos.flush();
-//                                fos.close();
-//                                Uri cameraFromFile = Uri.fromFile(realImg);
-//                                //裁剪图片
-//                                cutImage(cameraFromFile);
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
                     break;
                 case SELET_IN_PHONE:
                     Uri uriSelectInPhone = data.getData();
@@ -474,9 +452,70 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
 //                    File targetFile = new File(Environment.getExternalStorageDirectory().getPath() + "/" + PICTURE_FILE);
 //                    Bitmap q = BitmapFactory.decodeFile(targetFile.getPath());
 
-                    head_iv.setImageBitmap(q);
-                    break;
 
+                    try {
+                       File file = new File(imageUri.getPath());
+                        OkHttpClientManager.postAsyn("http://119.29.224.50/meetyou/public/uploadImage",//
+                                new OkHttpClientManager.ResultCallback<String>()
+                                {
+                                    @Override
+                                    public void onError(com.squareup.okhttp.Request request, Exception e) {
+
+                                    }
+                                    @Override
+                                    public void onResponse(String result)
+                                    {
+                                                try {
+                                                    Log.i("123", result);
+                                                    JSONObject jsonObject = new JSONObject(result);
+                                                    int status = jsonObject.getInt("msgCode");
+                                                    Log.i("123", status + "");
+                                                    msg = jsonObject.getString("msg");
+                                                    Log.i("123", msg);
+                                                    String url = jsonObject.getJSONObject("data").getString("headPic");
+                                                    new DownloadImageTask().execute(url);
+                                                } catch (JSONException je) {
+                                                    je.printStackTrace();
+                                                }
+                                    }
+                                },//
+                                file,//
+                                "file",//
+                                new OkHttpClientManager.Param[]{
+                                        new OkHttpClientManager.Param("user_account", "201430614243")}
+                        );
+                    } catch (Exception io) {
+                        io.printStackTrace();
+                    }
+                    break;
+            }
+        }
+    }
+
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+
+        public DownloadImageTask() {
+
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                Log.i("123", 147258 + "");
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if(result != null){
+               head_iv.setImageBitmap(result);
             }
         }
     }

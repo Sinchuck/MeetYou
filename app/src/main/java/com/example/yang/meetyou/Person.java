@@ -22,8 +22,20 @@ public class Person {
         this.name = name;
     }
 
+
+
     private Drawable heads;
     private String name;
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    private String account;
 
     public Person(Drawable drawable, String name) {
         heads = drawable;

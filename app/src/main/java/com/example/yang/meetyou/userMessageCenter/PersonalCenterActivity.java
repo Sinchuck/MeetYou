@@ -1,6 +1,9 @@
 package com.example.yang.meetyou.userMessageCenter;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -89,6 +93,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
                             if (status == 301) {
                                 handler.obtainMessage(SET_NICKNAME, jsonObject1.getString("user_nickName")).sendToTarget();
                                 handler.obtainMessage(SET_ACCOUNT, jsonObject1.getString("user_account")).sendToTarget();
+                                handler.obtainMessage(SET_HEADS,jsonObject1.getString("user_image")).sendToTarget();
                             }else if(status == 302){
                                 handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
                             }
@@ -122,6 +127,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
                     account_tv.setText(msg.obj.toString());
                     break;
                 case SET_HEADS:
+                    new DownloadImageTask().execute(msg.obj.toString());
                     break;
                 default:
                     break;
@@ -197,5 +203,33 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+
+        public DownloadImageTask() {
+
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                Log.i("123", 147258 + "");
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if(result != null){
+                head_iv.setImageBitmap(result);
+            }
+        }
     }
 }

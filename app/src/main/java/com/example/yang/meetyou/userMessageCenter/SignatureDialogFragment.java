@@ -86,11 +86,6 @@ public class SignatureDialogFragment extends DialogFragment implements View.OnCl
     };
     private void saveSignature() {
         signature = signature_edit.getText().toString();
-        if( signature.equals("")) {
-            handler.obtainMessage(SHOW_TOAST, "昵称不可为空").sendToTarget();
-            return;
-        }
-
         setSignature();
 
     }
