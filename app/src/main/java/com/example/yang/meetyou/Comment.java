@@ -23,6 +23,16 @@ public class Comment {
     private String content;
     private String commentTime;
 
+    public String getSenderAccount() {
+        return senderAccount;
+    }
+
+    public void setSenderAccount(String senderAccount) {
+        this.senderAccount = senderAccount;
+    }
+
+    private String senderAccount;
+
     public String getStorey() {
         return storey;
     }
