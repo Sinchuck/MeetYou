@@ -44,6 +44,7 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
     HuodongDetailsJson huodongDetailsJson;
 
     String activityId;
+    String user_account;
     String huodongDetails;
 
     LinearLayout mHeadsLinear;
@@ -93,7 +94,9 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
         comment.setOnClickListener(this);
         Bundle bundle = getIntent().getExtras();
         activityId = bundle.getString("activityId");
-        huodongDetails = "http://139.199.180.51/meetyou/public/activityInfo?activity_id=" + activityId;
+        user_account = PreferenceUtil.getString(ActivityContentActivity.this, PreferenceUtil.ACCOUNT);
+        huodongDetails = "http://139.199.180.51/meetyou/public/activityInfo?activity_id="
+                + activityId + "&user_account=" + user_account;
 
         new GetActivityData().execute();
     }
