@@ -152,9 +152,9 @@ public class AnswerDialogFragment extends DialogFragment implements View.OnClick
             case R.id.save_nickname_bt:
                 saveComment();
                 this.dismiss();
-//                Intent i = new Intent(getActivity(), ActivityContentActivity.class);
-//                startActivity(i);
-//                Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+                Intent i = new Intent(getActivity(), ActivityContentActivity.class);
+                startActivity(i);
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
                 break;
         }
     }

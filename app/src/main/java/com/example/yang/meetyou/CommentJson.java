@@ -22,16 +22,16 @@ public class CommentJson {
         this.msg = msg;
     }
 
-    public List<CommentDataObject> getData() {
+    public List<Comment> getData() {
         return data;
     }
 
-    public void setData(List<CommentDataObject> data) {
+    public void setData(List<Comment> data) {
         this.data = data;
     }
     private int msgCode;
     private String msg;
-    private List<CommentDataObject> data;
+    private List<Comment> data;
     @Override
     public String toString() {
         return "CommentJson{" +
