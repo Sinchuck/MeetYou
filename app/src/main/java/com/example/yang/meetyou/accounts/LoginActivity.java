@@ -100,7 +100,9 @@ public class LoginActivity extends AppCompatActivity {
         mForgetPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login();
+                Intent i = new Intent(LoginActivity.this, ChangePasswordActivity.class);
+                startActivity(i);
+                finish();
             }
         });
 

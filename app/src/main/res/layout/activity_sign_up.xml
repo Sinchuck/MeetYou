@@ -32,6 +32,7 @@
         <com.example.yang.meetyou.views.CleanEditText
             android:id="@+id/et_sing_up_password"
             android:hint="@string/register_password"
+            android:inputType="textPassword"
             style="@style/login_edit_style"/>
 
         <View

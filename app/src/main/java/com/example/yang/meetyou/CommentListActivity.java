@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yang.meetyou.utils.PreferenceUtil;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,27 +42,38 @@ import okhttp3.Response;
  */
 public class CommentListActivity extends AppCompatActivity {
     private static final int SHOW_TOAST = 11;
+    private static final int SET_VISIBILITY = 12;
     private static final String TAG = "CommentListActivity";
 
 
     private RecyclerView mRecyclerView;
     private CommentListAdapter mCommentListAdapter;
     private List<Comment> mCommentList = new ArrayList<>();
+    private List<CommentDataObject> mCommentDataObjects = new ArrayList<>();
 
     private TextView comment;
     private Bitmap headImage;
+    private TextView tip;
 
     public static String activity_id = "";
     final OkHttpClient mClient = new OkHttpClient();
     private String msg;
 
     private Bitmap[] bitmaps;
+    private Gson mGson = new Gson();
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SHOW_TOAST:
                     Toast.makeText(CommentListActivity.this,msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                    break;
+                case SET_VISIBILITY:
+                    if (tip.getVisibility() == View.GONE) {
+                        tip.setVisibility(View.VISIBLE);
+                    }else {
+                        tip.setVisibility(View.INVISIBLE);
+                    }
                     break;
                 default:
                     break;
@@ -85,58 +97,47 @@ public class CommentListActivity extends AppCompatActivity {
                         .tag(this)
                         .url(requestURL)
                         .build();
-
+                CommentJson commentJson = new CommentJson();
                 Response response;
                 try {
                     response = mClient.newCall(request).execute();
                     if (response.isSuccessful()) {
-                        try {
                             String response2 = response.body().string();
-                            JSONObject jsonObject = new JSONObject(response2);
                             Log.i(TAG, response2);
-                            int  status = jsonObject.getInt("msgCode");
-                            Log.i("123", status + "");
-                            msg = jsonObject.getString("msg");
-
-                            if (status == 501) {
-                                JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                if (jsonArray.length() == 0) {
+                            commentJson = mGson.fromJson(response2, CommentJson.class);
+                            if (commentJson.getMsgCode() == 501) {
+                                mCommentDataObjects = commentJson.getData();
+                                if (mCommentDataObjects.size() == 0) {
 
                                 }else{
-
-                                    for(int i = 0;i<jsonArray.length();i++){
-                                        JSONObject data = jsonArray.getJSONObject(i);
+                                    for(int i = 0;i<mCommentDataObjects.size();i++){
+                                        CommentDataObject commentDataObject = mCommentDataObjects.get(i);
                                         Comment comment = new Comment();
-                                        String id = data.getString("id");
-                                        String storey = data.getString("storey");
-                                        String content = data.getString("content");
-                                        String comment_time = data.getString("commentTime");
-                                        String senderImage = data.getString("senderImage");
-                                        String senderAccount = data.getString("senderAccount");
                                         String nickname = "";
-                                        if (data.getString("commentType").equals("0")) {
-                                            nickname = data.getString("senderNickName") + ":";
+                                        if (commentDataObject.getCommentType().equals("0")) {
+                                            nickname = commentDataObject.getSenderNickName()+ ":";
                                         }else{
-                                            nickname = data.getString("senderNickName") + " 回复 " + data.getString("receiverNickName") + ":";
+                                            nickname = commentDataObject.getSenderNickName() + " 回复 " + commentDataObject.getReceiverNickName() + ":";
                                         }
-                                        comment.setCommentId(id);
-                                        comment.setStorey(storey);
-                                        comment.setContent(content);
-                                        comment.setCommentTime(comment_time);
+                                        comment.setCommentId(commentDataObject.getId());
+                                        comment.setStorey(commentDataObject.getStorey());
+                                        comment.setContent(commentDataObject.getContent());
+                                        comment.setCommentTime(commentDataObject.getCommentTime());
                                         comment.setNickname(nickname);
-                                        comment.setUserHeads(senderImage);
-                                        comment.setSenderAccount(senderAccount);
+                                        comment.setUserHeads(commentDataObject.getSenderImage());
+                                        comment.setSenderAccount(commentDataObject.getSenderAccount());
                                         mCommentList.add(comment);
 
                                     }
                                 }
-                            }else if(status == 502){
-                                handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                            }else if(commentJson.getMsgCode() == 502){
+                                handler.obtainMessage(SHOW_TOAST,commentJson.getMsg()).sendToTarget();
                             }
-
-                        } catch (JSONException je) {
-                            je.printStackTrace();
+                        if (commentJson.getMsgCode() == 507) {
+                            handler.obtainMessage(SET_VISIBILITY,commentJson.getMsg()).sendToTarget();
                         }
+
+
                     } else {
                         throw new IOException("Unexpected code " + response);
                     }
@@ -150,6 +151,7 @@ public class CommentListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
+        tip = (TextView) findViewById(R.id.tip_tv);
         comment = (TextView) findViewById(R.id.comment);
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
