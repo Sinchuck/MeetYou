@@ -233,9 +233,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 theme = theme_et.getText().toString();
                 content = content_et.getText().toString();
                 if (activity_kind.equals("") || theme.equals("") || dateString.equals("") || content.equals("") || num_of_activity_person.equals("")) {
-                    Toast.makeText(PublishActivity.this,"请填写完所有信息",Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                Toast.makeText(PublishActivity.this,"请填写完所有信息",Toast.LENGTH_SHORT).show();
+                break;
+            }
                 new GetStatus().execute();
                 break;
 

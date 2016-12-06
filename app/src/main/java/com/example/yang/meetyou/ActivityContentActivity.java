@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,9 +14,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.yang.meetyou.userMessageCenter.OthersPersonalMessageActivity;
+import com.example.yang.meetyou.utils.PreferenceUtil;
 import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,9 +33,13 @@ import okhttp3.Response;
 /**
  * Created by Yang on 2016/9/26.
  */
-public class ActivityContentActivity extends AppCompatActivity {
+public class ActivityContentActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "ActivityContentActivity";
+    private static  final  int SHOW_TOAST = 11;
+    private static final int SET_VISIBLITY = 12;
+    public static final String ACTIVITY_ID = "ACTIVITY_ID";
+
 
     HuodongDetailsJson huodongDetailsJson;
 
@@ -49,6 +60,8 @@ public class ActivityContentActivity extends AppCompatActivity {
     TextView mMaxNumber;
     TextView mActivityDetails;
     ImageView mHeads;
+    TextView concern;
+    TextView comment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,7 +86,11 @@ public class ActivityContentActivity extends AppCompatActivity {
         mMaxNumber = (TextView) findViewById(R.id.content_max_number);
         mActivityDetails = (TextView) findViewById(R.id.content_activity_details);
         mHeads = (ImageView) findViewById(R.id.content_releaser_head);
+        concern = (TextView) findViewById(R.id.content_concern_tv);
+        comment = (TextView) findViewById(R.id.content_comment_tv);
 
+        concern.setOnClickListener(this);
+        comment.setOnClickListener(this);
         Bundle bundle = getIntent().getExtras();
         activityId = bundle.getString("activityId");
         huodongDetails = "http://139.199.180.51/meetyou/public/activityInfo?activity_id=" + activityId;
@@ -152,6 +169,75 @@ public class ActivityContentActivity extends AppCompatActivity {
     }
 
 
+    public Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SHOW_TOAST:
+                    Toast.makeText(ActivityContentActivity.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                    break;
+                case SET_VISIBLITY:
+                   concern.setEnabled(false);
+                    concern.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.content_concern_tv:
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String account = PreferenceUtil.getString(ActivityContentActivity.this, PreferenceUtil.ACCOUNT);
+                        String requestURL = " http://139.199.180.51/meetyou/public/participate?activity_id="+activityId+"&user_account=" + account;
 
+                        final Request request = new Request.Builder()
+                                .get()
+                                .tag(this)
+                                .url(requestURL)
+                                .build();
 
+                        Response response;
+                        try {
+                            response = mClient.newCall(request).execute();
+                            if (response.isSuccessful()) {
+                                try {
+                                    String response2 = response.body().string();
+                                    JSONObject jsonObject = new JSONObject(response2);
+                                    Log.i(TAG, response2);
+                                    int  status = jsonObject.getInt("msgCode");
+                                    Log.i("123", status + "");
+                                    String msg = jsonObject.getString("msg");
+
+                                    if (status == 401) {
+                                        handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                                       handler.obtainMessage(SET_VISIBLITY,msg).sendToTarget();
+                                    }else if(status == 402){
+                                        handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                                    }
+
+                                } catch (JSONException je) {
+                                    je.printStackTrace();
+                                }
+                            } else {
+                                throw new IOException("Unexpected code " + response);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+                break;
+            case R.id.content_comment_tv:
+                Intent i = new Intent(ActivityContentActivity.this, CommentListActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(ACTIVITY_ID, activityId);
+                i.putExtras(bundle);
+                startActivity(i);
+                break;
+        }
+    }
 }

@@ -1,36 +1,65 @@
 package com.example.yang.meetyou;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Yang on 2016/12/5.
  */
 public class Comment {
-    private Person commentPerson;
-    private Person receiveCommentPerson;
-    private int commentType;
+
+
+    private String userHeads;
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    private String nickname;
+    private String commentType;
     private String content;
     private String commentTime;
 
-    public Person getReceiveCommentPerson() {
-        return receiveCommentPerson;
+    public String getStorey() {
+        return storey;
     }
 
-    public void setReceiveCommentPerson(Person receiveCommentPerson) {
-        this.receiveCommentPerson = receiveCommentPerson;
+    public void setStorey(String storey) {
+        this.storey = storey;
     }
 
-    public Person getCommentPerson() {
-        return commentPerson;
+    private String storey; //评论在数据库里面的索引
+
+
+    public String getCommentId() {
+        return commentId;
     }
 
-    public void setCommentPerson(Person commentPerson) {
-        this.commentPerson = commentPerson;
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
     }
 
-    public int getCommentType() {
+    private String commentId;
+
+
+
+    public String getUserHeads() {
+        return userHeads;
+    }
+
+    public void setUserHeads(String userHeads) {
+        this.userHeads = userHeads;
+    }
+
+    public String getCommentType() {
         return commentType;
     }
 
-    public void setCommentType(int commentType) {
+    public void setCommentType(
+            String commentType) {
         this.commentType = commentType;
     }
 
