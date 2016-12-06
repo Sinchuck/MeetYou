@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.yang.meetyou.HomePageActivity;
 import com.example.yang.meetyou.R;
+import com.example.yang.meetyou.utils.PreferenceUtil;
 import com.example.yang.meetyou.utils.RegexUtils;
 import com.example.yang.meetyou.views.CleanEditText;
 
@@ -50,6 +51,8 @@ implements AdapterView.OnItemSelectedListener {
     String password;
     String nickname;
     String phoneNumber;
+
+
 
     final OkHttpClient mClient = new OkHttpClient();
 
@@ -186,6 +189,7 @@ implements AdapterView.OnItemSelectedListener {
                 Toast.makeText(SignUpActivity.this, "该用户已注册", Toast.LENGTH_SHORT).show();
             } else if (status == 202) {
                 Toast.makeText(SignUpActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                PreferenceUtil.setString(SignUpActivity.this, PreferenceUtil.ACCOUNT, account);
                 Intent intent = new Intent(SignUpActivity.this, HomePageActivity.class);
                 startActivity(intent);
                 finish();
