@@ -106,15 +106,16 @@ public class HomePageAdapter extends BaseAdapter{
             }
         }
     }
-    class ViewHolder {
 
-        public TextView userNickName;
-        public TextView tagId;
-        public TextView activityTheme;
-        public TextView activityTime;
-        public TextView participantCount;
-        public TextView maxCount;
+    private class ViewHolder {
 
-        public ImageView userImage;
+        TextView userNickName;
+        TextView tagId;
+        TextView activityTheme;
+        TextView activityTime;
+        TextView participantCount;
+        TextView maxCount;
+
+        ImageView userImage;
     }
 }
