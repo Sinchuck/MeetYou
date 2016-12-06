@@ -1,10 +1,6 @@
 package com.example.yang.meetyou;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.InputStream;
+import com.example.yang.meetyou.utils.DownloadImageTask;
+
 import java.util.List;
 
 /**
@@ -69,7 +66,7 @@ public class HomePageAdapter extends BaseAdapter{
         }
 
 
-        new DownloadImageTask().execute(mHuodongs.get(position).getUserImage());
+        new DownloadImageTask(viewHolder.userImage).execute(mHuodongs.get(position).getUserImage());
         viewHolder.userNickName.setText(mHuodongs.get(position).getUserNickName());
         viewHolder.tagId.setText(mHuodongs.get(position).getTagId());
         viewHolder.activityTheme.setText(mHuodongs.get(position).getActivityTheme());
@@ -78,33 +75,6 @@ public class HomePageAdapter extends BaseAdapter{
         viewHolder.maxCount.setText(mHuodongs.get(position).getMaxCount());
 
         return convertView;
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        public DownloadImageTask() {
-
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                Log.i("123", 147258 + "");
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            if(result != null){
-                viewHolder.userImage.setImageBitmap(result);
-            }
-        }
     }
 
     private class ViewHolder {

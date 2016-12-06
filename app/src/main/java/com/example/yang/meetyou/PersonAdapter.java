@@ -1,10 +1,6 @@
 package com.example.yang.meetyou;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.InputStream;
+import com.example.yang.meetyou.utils.DownloadImageTask;
+
 import java.util.List;
 
 /**
@@ -59,36 +56,9 @@ public class PersonAdapter extends BaseAdapter {
         }
 
         mViewHolder.userNickname.setText(mPersons.get(position).getUserNickName());
-        new DownloadImageTask().execute(mPersons.get(position).getUserImage());
+        new DownloadImageTask(mViewHolder.userImage).execute(mPersons.get(position).getUserImage());
 
         return convertView;
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        public DownloadImageTask() {
-
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                Log.i("123", 147258 + "");
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            if(result != null){
-                mViewHolder.userImage.setImageBitmap(result);
-            }
-        }
     }
 
     class ViewHolder {

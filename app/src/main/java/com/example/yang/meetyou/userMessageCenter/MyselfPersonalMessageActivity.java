@@ -320,6 +320,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         mPopWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
 
     }
+
     public void cutImage(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
@@ -380,6 +381,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         });
         thread.start();
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -430,6 +432,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         }
         return super.onTouchEvent(event);
     }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -491,7 +494,6 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
             }
         }
     }
-
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 

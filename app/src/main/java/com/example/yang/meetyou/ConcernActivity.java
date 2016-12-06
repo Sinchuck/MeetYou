@@ -88,7 +88,11 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
         mFriendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.i("USER_ACCOUNT", mPersonList.get(i).getUserAccount());
+                Bundle bundle = new Bundle();
+                bundle.putString("userAccount", mPersonList.get(i).getUserAccount());
                 Intent b = new Intent(ConcernActivity.this, OthersPersonalMessageActivity.class);
+                b.putExtras(bundle);
                 startActivity(b);
             }
         });
@@ -99,9 +103,9 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
 
     private class RefreshConcernHuodong extends AsyncTask<String, Void, List<Huodong>> {
 
-        final String account = PreferenceUtil.getString(ConcernActivity.this, PreferenceUtil.ACCOUNT);
+        private final String account = PreferenceUtil.getString(ConcernActivity.this, PreferenceUtil.ACCOUNT);
 
-        String refresh = "http://139.199.180.51/meetyou/public/refreshSocietyActivity?user_account=" + "201587654321";
+        String refresh = "http://139.199.180.51/meetyou/public/refreshSocietyActivity?user_account=" + "201430760384";
 
         @Override
         protected List<Huodong> doInBackground(String... params) {
@@ -145,7 +149,7 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
 
     private class RefreshConcernFriend extends AsyncTask<String, Void, List<Person>> {
 
-        final String account = PreferenceUtil.getString(ConcernActivity.this, PreferenceUtil.ACCOUNT);
+        private final String account = PreferenceUtil.getString(ConcernActivity.this, PreferenceUtil.ACCOUNT);
 
         String refresh = "http://139.199.180.51/meetyou/public/refreshSocietyUser?user_account=" + "201487654321";
 

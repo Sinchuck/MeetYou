@@ -1,8 +1,6 @@
 package com.example.yang.meetyou;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yang.meetyou.userMessageCenter.OthersPersonalMessageActivity;
+import com.example.yang.meetyou.utils.DownloadImageTask;
 import com.example.yang.meetyou.utils.PreferenceUtil;
 import com.google.gson.Gson;
 
@@ -24,7 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -140,34 +138,8 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
             mActivityTag.setText(detailsJson.getActivityInfo().activity_tag);
             mActivityTheme.setText(detailsJson.getActivityInfo().activity_theme);
             mActivityTime.setText(detailsJson.getActivityInfo().activity_time);
-            new DownloadImageTask().execute(detailsJson.getActivityInfo().activity_releaser_headPic);
+            new DownloadImageTask(mHeads).execute(detailsJson.getActivityInfo().activity_releaser_headPic);
 
-        }
-        private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-            public DownloadImageTask() {
-
-            }
-
-            protected Bitmap doInBackground(String... urls) {
-                String urldisplay = urls[0];
-                Bitmap mIcon11 = null;
-                try {
-                    Log.i("123", 147258 + "");
-                    InputStream in = new java.net.URL(urldisplay).openStream();
-                    mIcon11 = BitmapFactory.decodeStream(in);
-                } catch (Exception e) {
-                    Log.e("Error", e.getMessage());
-                    e.printStackTrace();
-                }
-                return mIcon11;
-            }
-
-            protected void onPostExecute(Bitmap result) {
-                if(result != null){
-                    mHeads.setImageBitmap(result);
-                }
-            }
         }
     }
 
