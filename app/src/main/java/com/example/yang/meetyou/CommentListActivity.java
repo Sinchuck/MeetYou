@@ -1,5 +1,7 @@
 package com.example.yang.meetyou;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.yang.meetyou.utils.PreferenceUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,8 +68,13 @@ public class CommentListActivity extends AppCompatActivity {
             }
         }
     };
-    protected void onStart() {
-        super.onStart();
+//    protected void onStart() {
+//        super.onStart();
+//        getComment();
+//
+//    }
+
+    public  void getComment() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -93,7 +103,7 @@ public class CommentListActivity extends AppCompatActivity {
                                 if (jsonArray.length() == 0) {
 
                                 }else{
-                                    bitmaps = new Bitmap[jsonArray.length()];
+
                                     for(int i = 0;i<jsonArray.length();i++){
                                         JSONObject data = jsonArray.getJSONObject(i);
                                         Comment comment = new Comment();
@@ -102,9 +112,10 @@ public class CommentListActivity extends AppCompatActivity {
                                         String content = data.getString("content");
                                         String comment_time = data.getString("commentTime");
                                         String senderImage = data.getString("senderImage");
+                                        String senderAccount = data.getString("senderAccount");
                                         String nickname = "";
                                         if (data.getString("commentType").equals("0")) {
-                                             nickname = data.getString("senderNickName") + ":";
+                                            nickname = data.getString("senderNickName") + ":";
                                         }else{
                                             nickname = data.getString("senderNickName") + " 回复 " + data.getString("receiverNickName") + ":";
                                         }
@@ -114,6 +125,7 @@ public class CommentListActivity extends AppCompatActivity {
                                         comment.setCommentTime(comment_time);
                                         comment.setNickname(nickname);
                                         comment.setUserHeads(senderImage);
+                                        comment.setSenderAccount(senderAccount);
                                         mCommentList.add(comment);
 
                                     }
@@ -134,8 +146,6 @@ public class CommentListActivity extends AppCompatActivity {
             }
         }).start();
     }
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,6 +166,7 @@ public class CommentListActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(new CommentListAdapter());
 
+        getComment();
     }
 
     class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.MyViewHolder>
@@ -173,9 +184,21 @@ public class CommentListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(MyViewHolder holder, int position)
         {
-            Comment comment = mCommentList.get(position);
+            final Comment comment = mCommentList.get(position);
 
             holder.bindComment(comment.getUserHeads(), comment.getNickname(), comment.getContent(), comment.getCommentTime());
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String account = PreferenceUtil.getString(CommentListActivity.this, PreferenceUtil.ACCOUNT);
+                    if (account.equals(comment.getSenderAccount())) {
+                       showDeleteCommentDialog(comment);
+                    }else{
+                        AnswerDialogFragment.newInstance(CommentListActivity.this,comment.getCommentId()).show(getSupportFragmentManager()," AnswerDialogFragment");
+                    }
+                }
+            });
         }
 
         @Override
@@ -184,6 +207,63 @@ public class CommentListActivity extends AppCompatActivity {
             return mCommentList.size();
         }
 
+        public void showDeleteCommentDialog(final Comment comment) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(CommentListActivity.this)
+                    .setTitle("确定删除此条评论？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    String requestURL = "http://139.199.180.51/meetyou/public/deleteComment?comment_id=" + comment.getCommentId();
+                                    final Request request = new Request.Builder()
+                                            .get()
+                                            .tag(this)
+                                            .url(requestURL)
+                                            .build();
+
+                                    Response response;
+                                    try {
+                                        response = mClient.newCall(request).execute();
+                                        if (response.isSuccessful()) {
+                                            try {
+                                                String response2 = response.body().string();
+                                                JSONObject jsonObject = new JSONObject(response2);
+                                                Log.i(TAG, response2);
+                                                int  status = jsonObject.getInt("msgCode");
+                                                Log.i("123", status + "");
+                                                msg = jsonObject.getString("msg");
+                                                if (status == 505) {
+                                                    handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                                                }else if(status == 506){
+                                                    handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                                                }
+
+                                            } catch (JSONException je) {
+                                                je.printStackTrace();
+                                            }
+                                        } else {
+                                            throw new IOException("Unexpected code " + response);
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
+                            Intent i = new Intent(CommentListActivity.this, ActivityContentActivity.class);
+                            startActivity(i);
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            builder.create().show();
+        }
         class MyViewHolder extends RecyclerView.ViewHolder
         {
             ImageView user_head;
