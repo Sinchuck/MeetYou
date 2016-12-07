@@ -3,8 +3,6 @@ package com.example.yang.meetyou;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.utils.DownloadImageTask;
 import com.example.yang.meetyou.utils.PreferenceUtil;
 
 import org.json.JSONArray;
@@ -28,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -280,36 +278,10 @@ public class CommentListActivity extends AppCompatActivity {
             }
 
             public void bindComment(String user_image, String nickname, String comment,String user_comment_time) {
-                new DownloadImageTask().execute(user_image);
+                new DownloadImageTask(user_head).execute(user_image);
                 user_nickname.setText(nickname);
                 user_comment.setText(comment);
                 comment_time.setText(user_comment_time);
-            }
-
-            private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-                public DownloadImageTask() {
-
-                }
-
-                protected Bitmap doInBackground(String... urls) {
-                    String urldisplay = urls[0];
-                    Bitmap mIcon11 = null;
-                    try {
-                        InputStream in = new java.net.URL(urldisplay).openStream();
-                        mIcon11 = BitmapFactory.decodeStream(in);
-                    } catch (Exception e) {
-                        Log.e("Error", e.getMessage());
-                        e.printStackTrace();
-                    }
-                    return mIcon11;
-                }
-
-                protected void onPostExecute(Bitmap result) {
-                    if(result != null){
-                        user_head.setImageBitmap(result);
-                    }
-                }
             }
         }
     }

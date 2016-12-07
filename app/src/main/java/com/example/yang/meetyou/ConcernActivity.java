@@ -46,6 +46,9 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
     TextView mPublish;
     TextView mPersonalCenter;
 
+    private int concernActivityMsgCode;
+    private int concernFriendMsgCode;
+
     OkHttpClient mClient = new OkHttpClient();
     Gson mGson = new Gson();
 
@@ -98,14 +101,13 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
         });
 
         new RefreshConcernHuodong().execute();
-        new RefreshConcernFriend().execute();
     }
 
     private class RefreshConcernHuodong extends AsyncTask<String, Void, List<Huodong>> {
 
         private final String account = PreferenceUtil.getString(ConcernActivity.this, PreferenceUtil.ACCOUNT);
 
-        String refresh = "http://139.199.180.51/meetyou/public/refreshSocietyActivity?user_account=" + "201430760384";
+        String refresh = "http://139.199.180.51/meetyou/public/refreshSocietyActivity?user_account=" + account;
 
         @Override
         protected List<Huodong> doInBackground(String... params) {
@@ -121,12 +123,13 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
                 response = mClient.newCall(request).execute();
                 if (response.isSuccessful()) {
                     try {
-                            ConcernActivityJson concernActivityJson = mGson.fromJson(response.body().string(),
-                                    ConcernActivityJson.class);
+                        ConcernActivityJson concernActivityJson = mGson.fromJson(response.body().string(),
+                                ConcernActivityJson.class);
+                        concernActivityMsgCode = concernActivityJson.getMsgCode();
+                        if (concernActivityMsgCode == 703) {
                             mHuodongList = concernActivityJson.getData();
                             Log.i(TAG, concernActivityJson.toString());
-                            Log.i(TAG, mHuodongList.toString());
-
+                        }
                     } catch (Exception je) {
                         je.printStackTrace();
                     }
@@ -142,8 +145,12 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(List<Huodong> huodongs) {
             super.onPostExecute(huodongs);
-                HomePageAdapter adapter = new HomePageAdapter(ConcernActivity.this, huodongs);
-                mActivityListView.setAdapter(adapter);
+            HomePageAdapter adapter = new HomePageAdapter(ConcernActivity.this, huodongs);
+            mActivityListView.setAdapter(adapter);
+
+            if (concernActivityMsgCode == 708) {
+                Toast.makeText(ConcernActivity.this, "你还没有关注活动", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -151,7 +158,7 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
 
         private final String account = PreferenceUtil.getString(ConcernActivity.this, PreferenceUtil.ACCOUNT);
 
-        String refresh = "http://139.199.180.51/meetyou/public/refreshSocietyUser?user_account=" + "201487654321";
+        String refresh = "http://139.199.180.51/meetyou/public/refreshSocietyUser?user_account=" + account;
 
         @Override
         protected List<Person> doInBackground(String... params) {
@@ -169,10 +176,12 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
                     try {
                         ConcernFriendJson concernFriendJson = mGson.fromJson(response.body().string(),
                                 ConcernFriendJson.class);
-                        mPersonList = concernFriendJson.getData();
-                        Log.i(TAG, concernFriendJson.toString());
-                        Log.i(TAG, mHuodongList.toString());
-
+                        concernFriendMsgCode = concernFriendJson.getMsgCode();
+                        if (concernFriendMsgCode == 705) {
+                            mPersonList = concernFriendJson.getData();
+                            Log.i(TAG, concernFriendJson.toString());
+                            Log.i(TAG, mPersonList.toString());
+                        }
                     } catch (Exception je) {
                         je.printStackTrace();
                     }
@@ -188,8 +197,13 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(List<Person> persons) {
             super.onPostExecute(persons);
-            PersonAdapter adapter = new PersonAdapter(ConcernActivity.this, persons);
-            mFriendListView.setAdapter(adapter);
+            if (concernFriendMsgCode == 705) {
+                PersonAdapter adapter = new PersonAdapter(ConcernActivity.this, persons);
+                mFriendListView.setAdapter(adapter);
+            }
+            if (concernFriendMsgCode == 709) {
+                Toast.makeText(ConcernActivity.this, "你还没有关注的好友", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -204,6 +218,7 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
 
                 break;
             case R.id.tv_concernFriend:
+                new RefreshConcernFriend().execute();
                 mActivityListView.setVisibility(View.GONE);
                 mFriendListView.setVisibility(view.VISIBLE);
                 tv_concernFriend.setTextColor(Color.rgb(34,144, 175));
@@ -242,4 +257,3 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
         return super.onKeyDown(keyCode, event);
     }
 }
-

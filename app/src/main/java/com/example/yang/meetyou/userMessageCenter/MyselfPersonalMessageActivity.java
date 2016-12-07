@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -29,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yang.meetyou.R;
+import com.example.yang.meetyou.utils.DownloadImageTask;
 import com.example.yang.meetyou.utils.OkHttpClientManager;
 import com.example.yang.meetyou.utils.PreferenceUtil;
 
@@ -37,7 +37,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -177,7 +176,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
 
 
                 case SET_HEADS:
-                    new DownloadImageTask().execute(msg.obj.toString());
+                    new DownloadImageTask(head_iv).execute(msg.obj.toString());
                     break;
 
                 default:
@@ -476,7 +475,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
                                             msg = jsonObject.getString("msg");
                                             Log.i("123", msg);
                                             String url = jsonObject.getJSONObject("data").getString("headPic");
-                                            new DownloadImageTask().execute(url);
+                                            new DownloadImageTask(head_iv).execute(url);
                                         } catch (JSONException je) {
                                             je.printStackTrace();
                                         }
@@ -491,33 +490,6 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
                         io.printStackTrace();
                     }
                     break;
-            }
-        }
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        public DownloadImageTask() {
-
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                Log.i("123", 147258 + "");
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            if(result != null){
-               head_iv.setImageBitmap(result);
             }
         }
     }

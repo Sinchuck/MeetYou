@@ -38,12 +38,12 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
     private static final int SET_VISIBLITY = 12;
     public static final String ACTIVITY_ID = "ACTIVITY_ID";
 
-
     HuodongDetailsJson huodongDetailsJson;
 
     String activityId;
     String user_account;
     String huodongDetails;
+    String othersUserAccount;
 
     LinearLayout mHeadsLinear;
     TextView mActivityNameTextView;
@@ -72,7 +72,10 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
         mHeadsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("userAccount", othersUserAccount);
                 Intent a = new Intent(ActivityContentActivity.this, OthersPersonalMessageActivity.class);
+                a.putExtras(bundle);
                 startActivity(a);
             }
         });
@@ -90,6 +93,7 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
 
         concern.setOnClickListener(this);
         comment.setOnClickListener(this);
+
         Bundle bundle = getIntent().getExtras();
         activityId = bundle.getString("activityId");
         user_account = PreferenceUtil.getString(ActivityContentActivity.this, PreferenceUtil.ACCOUNT);
@@ -140,6 +144,7 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
             mActivityTime.setText(detailsJson.getActivityInfo().activity_time);
             new DownloadImageTask(mHeads).execute(detailsJson.getActivityInfo().activity_releaser_headPic);
 
+            othersUserAccount = detailsJson.getActivityInfo().activity_releaser_account;
         }
     }
 
@@ -183,7 +188,7 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
                                     String response2 = response.body().string();
                                     JSONObject jsonObject = new JSONObject(response2);
                                     Log.i(TAG, response2);
-                                    int  status = jsonObject.getInt("msgCode");
+                                    int status = jsonObject.getInt("msgCode");
                                     Log.i("123", status + "");
                                     String msg = jsonObject.getString("msg");
 

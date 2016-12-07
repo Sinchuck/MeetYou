@@ -1,7 +1,6 @@
 package com.example.yang.meetyou;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +14,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.yang.meetyou.userMessageCenter.MyselfPersonalMessageActivity;
 import com.example.yang.meetyou.utils.PreferenceUtil;
 
 import org.json.JSONException;

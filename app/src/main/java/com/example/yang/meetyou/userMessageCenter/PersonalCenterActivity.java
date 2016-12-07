@@ -1,9 +1,6 @@
 package com.example.yang.meetyou.userMessageCenter;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,13 +20,13 @@ import com.example.yang.meetyou.HomePageActivity;
 import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.accounts.LoginActivity;
 import com.example.yang.meetyou.publish.PublishActivity;
+import com.example.yang.meetyou.utils.DownloadImageTask;
 import com.example.yang.meetyou.utils.PreferenceUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -60,7 +57,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
 
     final OkHttpClient mClient = new OkHttpClient();
 
-
+    private String userAccount;
     private String msg;
     protected void onStart () {
         super.onStart();
@@ -85,15 +82,16 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
                             String response2 = response.body().string();
                             JSONObject jsonObject = new JSONObject(response2);
                             Log.i(TAG, response2);
-                           int  status = jsonObject.getInt("msgCode");
+                            int status = jsonObject.getInt("msgCode");
                             Log.i("123", status + "");
                             msg = jsonObject.getString("msg");
                             JSONObject jsonObject1 = jsonObject.getJSONObject("data");
 
                             if (status == 301) {
+                                userAccount = jsonObject1.getString("user_account");
                                 handler.obtainMessage(SET_NICKNAME, jsonObject1.getString("user_nickName")).sendToTarget();
                                 handler.obtainMessage(SET_ACCOUNT, jsonObject1.getString("user_account")).sendToTarget();
-                                handler.obtainMessage(SET_HEADS,jsonObject1.getString("user_image")).sendToTarget();
+                                handler.obtainMessage(SET_HEADS, jsonObject1.getString("user_image")).sendToTarget();
                             }else if(status == 302){
                                 handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
                             }
@@ -113,7 +111,6 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
 
     }
 
-
     public Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -127,7 +124,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
                     account_tv.setText(msg.obj.toString());
                     break;
                 case SET_HEADS:
-                    new DownloadImageTask().execute(msg.obj.toString());
+                    new DownloadImageTask(head_iv).execute(msg.obj.toString());
                     break;
                 default:
                     break;
@@ -188,7 +185,11 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
                 startActivity(f);
                 break;
             case R.id.tv_activity_has_published_by_user:
-                startActivity(new Intent(PersonalCenterActivity.this, ActivityHasPublishedByUserActivity.class));
+                Bundle bundle = new Bundle();
+                bundle.putString("userAccount", userAccount);
+                Intent intent = new Intent(PersonalCenterActivity.this, ActivityHasPublishedByUserActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
                 break;
         }
     }
@@ -203,33 +204,5 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        public DownloadImageTask() {
-
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                Log.i("123", 147258 + "");
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            if(result != null){
-                head_iv.setImageBitmap(result);
-            }
-        }
     }
 }

@@ -64,7 +64,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     Gson mGson = new Gson();
 
     private int refreshIndex = -1;
-    int status;
+    private int homePageMsgCode;
+    private int searchMsgCode;
 
     private SharedPreferences sp;
 
@@ -213,15 +214,21 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                         if (which == 1) {
                             HomePageJson homePageJson = mGson.fromJson(response.body().string(),
                                     HomePageJson.class);
-                            mHuodongList = homePageJson.getData();
-                            Log.i(TAG, homePageJson.toString());
-                            Log.i(TAG, mHuodongList.toString());
+                            homePageMsgCode = homePageJson.getMsgCode();
+                            if (homePageMsgCode == 701) {
+                                mHuodongList = homePageJson.getData();
+                                Log.i(TAG, homePageJson.toString());
+                                Log.i(TAG, mHuodongList.toString());
+                            }
                         } else if (which == 2 || which == 3) {
                             SearchJson searchJson = mGson.fromJson(response.body().string(),
                                     SearchJson.class);
-                            mHuodongList = searchJson.getData();
-                            Log.i(TAG, searchJson.toString());
-                            Log.i(TAG, mHuodongList.toString());
+                            searchMsgCode = searchJson.getMsgCode();
+                            if (searchMsgCode == 601) {
+                                mHuodongList = searchJson.getData();
+                                Log.i(TAG, searchJson.toString());
+                                Log.i(TAG, mHuodongList.toString());
+                            }
                         }
 
                     } catch (Exception je) {
@@ -242,6 +249,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
             HomePageAdapter adapter = new HomePageAdapter(HomePageActivity.this, huodongs);
             mListView.setAdapter(adapter);
+            if (homePageMsgCode == 707) {
+                Toast.makeText(HomePageActivity.this, "暂时没有新活动", Toast.LENGTH_SHORT).show();
+            }
+            if (searchMsgCode == 603) {
+                Toast.makeText(HomePageActivity.this, "没有搜索到你所需要的活动",
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

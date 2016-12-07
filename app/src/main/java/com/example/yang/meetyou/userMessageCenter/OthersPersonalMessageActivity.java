@@ -1,6 +1,7 @@
 package com.example.yang.meetyou.userMessageCenter;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,6 +41,7 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
     private static final int SET_SEX =15;
     private static final int SET_CONTACT = 16;
     private static final int SET_SIGNATURE = 17;
+    private static final int SET_IS_FOLLOWED = 18;
 
     ImageView mOthersImage;
 
@@ -54,9 +56,16 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
 
     OkHttpClient mClient = new OkHttpClient();
 
-    String userAccount;
+    String othersAccount;
     String msg;
     String requestURL;
+    String method;
+    String userAccount;
+    String[] requestString = new String[3];
+
+    private int status;
+
+    boolean isFollowed;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +77,11 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
         otherPublishedActivityTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent a = new Intent(OthersPersonalMessageActivity.this, ActivityHasPublishedByUserActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("userAccount", othersAccount);
+                Intent a = new Intent(OthersPersonalMessageActivity.this,
+                        ActivityHasPublishedByUserActivity.class);
+                a.putExtras(bundle);
                 startActivity(a);
             }
         });
@@ -80,12 +93,92 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
         mOthersContactInfo = (TextView) findViewById(R.id.tv_others_contact);
         mOthersSignature = (TextView) findViewById(R.id.others_signature);
         mWatchOthers = (TextView) findViewById(R.id.watch_others);
+        mWatchOthers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mWatchOthers.getText().toString().equals("关注")) {
+                    method = "followUser";
+                    requestString[0] = method;
+                    userAccount = PreferenceUtil.getString(OthersPersonalMessageActivity.this, PreferenceUtil.ACCOUNT);
+                    requestString[1] = userAccount;
+                    requestString[2] = othersAccount;
+                    new GetConcernStatus().execute(requestString);
+                } else if (mWatchOthers.getText().toString().equals("取消关注")) {
+                    method = "unfollowUser";
+                    requestString[0] = method;
+                    userAccount = PreferenceUtil.getString(OthersPersonalMessageActivity.this, PreferenceUtil.ACCOUNT);
+                    requestString[1] = userAccount;
+                    requestString[2] = othersAccount;
+                    new GetConcernStatus().execute(requestString);
+                }
+            }
+        });
 
         Bundle bundle = getIntent().getExtras();
-        userAccount = bundle.getString("userAccount");
+        othersAccount = bundle.getString("userAccount");
 
         getOthersMessage();
 
+    }
+
+    private class GetConcernStatus extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(String... params) {
+
+            String requestURL = " http://139.199.180.51/meetyou/public/" + params[0] + "?user_account="
+                    + params[1] + "&follow_user_account=" + params[2];
+
+            final Request request = new Request.Builder()
+                    .get()
+                    .tag(this)
+                    .url(requestURL)
+                    .build();
+
+            Response response;
+            try {
+                response = mClient.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    try {
+                        String response2 = response.body().string();
+                        JSONObject jsonObject = new JSONObject(response2);
+                        Log.i(TAG, response2);
+                        status = jsonObject.getInt("msgCode");
+                        String msg = jsonObject.getString("msg");
+
+                        if (status == 309) {
+                            Log.i(TAG, "关注成功");
+                        } else if(status == 310) {
+                            Log.i(TAG, "关注失败");
+                        } else if (status == 311) {
+                            Log.i(TAG, "取消关注成功");
+                        } else if (status == 312) {
+                            Log.i(TAG, "取消关注失败");
+                        }
+                    } catch (JSONException je) {
+                        je.printStackTrace();
+                    }
+                } else {
+                    throw new IOException("Unexpected code " + response);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return status;
+        }
+
+        @Override
+        protected void onPostExecute(Integer sta) {
+            if (status == 309) {
+                mWatchOthers.setText("取消关注");
+            } else if (status == 310) {
+                Toast.makeText(OthersPersonalMessageActivity.this, "关注失败", Toast.LENGTH_SHORT).show();;
+            } else if (status == 311) {
+                mWatchOthers.setText("关注");
+            } else if (status == 312) {
+                Toast.makeText(OthersPersonalMessageActivity.this, "取消关注失败", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     protected void getOthersMessage() {
@@ -95,7 +188,7 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                requestURL = " http://139.199.180.51/meetyou/public/userInfo?user_account=" + userAccount
+                requestURL = "http://139.199.180.51/meetyou/public/otherUserInfo?user_account=" + othersAccount
                     + "&using_account=" + usingAccount;
 
                 final Request request = new Request.Builder()
@@ -124,6 +217,8 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
                                 handler.obtainMessage(SET_SEX, jsonObject1.getString("user_sex")).sendToTarget();
                                 handler.obtainMessage(SET_CONTACT,jsonObject1.getString("user_contacts")).sendToTarget();
                                 handler.obtainMessage(SET_SIGNATURE, jsonObject1.getString("user_description")).sendToTarget();
+                                handler.obtainMessage(SET_IS_FOLLOWED, jsonObject1.getString("isFollowed")).sendToTarget();
+                                Log.i(TAG, jsonObject1.getString("isFollowed"));
                             }else if(status == 302){
                                 handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
                             }
@@ -142,7 +237,6 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
         }).start();
 
     }
-
 
     public Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -168,6 +262,15 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
 
                 case SET_HEADS:
                     new DownloadImageTask(mOthersImage).execute(msg.obj.toString());
+                    break;
+
+                case SET_IS_FOLLOWED:
+                    Log.i("123", msg.obj.toString());
+                    if (msg.obj.toString().equals("no")) {
+                        mWatchOthers.setText("关注");
+                    } else {
+                        mWatchOthers.setText("取消关注");
+                    }
                     break;
 
                 default:
