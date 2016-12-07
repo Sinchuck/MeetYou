@@ -43,6 +43,7 @@ public class HuodongDetailsJson {
     }
 
      public class ActivityInfo {
+         public String isParticipated;
          public String activity_tag;
          public String activity_theme;
          public String activity_release_time;
@@ -58,7 +59,8 @@ public class HuodongDetailsJson {
          @Override
          public String toString() {
              return "ActivityInfo{" +
-                     "activity_tag='" + activity_tag + '\'' +
+                     "activity_is_participated='" + isParticipated + '\'' +
+                     ", activity_tag='" + activity_tag + '\'' +
                      ", activity_theme='" + activity_theme + '\'' +
                      ", activity_release_time='" + activity_release_time + '\'' +
                      ", activity_time='" + activity_time + '\'' +

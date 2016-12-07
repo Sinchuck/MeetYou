@@ -7,8 +7,30 @@ import android.graphics.Bitmap;
  */
 public class Comment {
 
+    private String nickname;
+    private String commentId;
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "nickname='" + nickname + '\'' +
+                ", commentId='" + commentId + '\'' +
+                ", userHeads='" + userHeads + '\'' +
+                ", senderAccount='" + senderAccount + '\'' +
+                ", storey='" + storey + '\'' +
+                ", commentType='" + commentType + '\'' +
+                ", content='" + content + '\'' +
+                ", commentTime='" + commentTime + '\'' +
+                '}';
+    }
 
     private String userHeads;
+    private String senderAccount;
+    private String storey; //评论在数据库里面的索引
+    private String commentType;
+    private String content;
+    private String commentTime;
+
 
     public String getNickname() {
         return nickname;
@@ -17,12 +39,6 @@ public class Comment {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-
-    private String nickname;
-    private String commentType;
-    private String content;
-    private String commentTime;
-
     public String getSenderAccount() {
         return senderAccount;
     }
@@ -31,7 +47,7 @@ public class Comment {
         this.senderAccount = senderAccount;
     }
 
-    private String senderAccount;
+
 
     public String getStorey() {
         return storey;
@@ -41,7 +57,7 @@ public class Comment {
         this.storey = storey;
     }
 
-    private String storey; //评论在数据库里面的索引
+
 
 
     public String getCommentId() {
@@ -52,7 +68,6 @@ public class Comment {
         this.commentId = commentId;
     }
 
-    private String commentId;
 
 
 

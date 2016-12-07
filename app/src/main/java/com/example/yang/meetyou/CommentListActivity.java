@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.yang.meetyou.utils.DownloadImageTask;
 import com.example.yang.meetyou.utils.PreferenceUtil;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +40,7 @@ import okhttp3.Response;
  */
 public class CommentListActivity extends AppCompatActivity {
     private static final int SHOW_TOAST = 11;
+    private static final int SET_VISIBILITY = 12;
     private static final String TAG = "CommentListActivity";
 
 
@@ -48,18 +50,27 @@ public class CommentListActivity extends AppCompatActivity {
 
     private TextView comment;
     private Bitmap headImage;
+    private TextView tip;
 
     public static String activity_id = "";
     final OkHttpClient mClient = new OkHttpClient();
-    private String msg;
+    private String msg ="";
 
     private Bitmap[] bitmaps;
+    private Gson mGson = new Gson();
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SHOW_TOAST:
                     Toast.makeText(CommentListActivity.this,msg.obj.toString(), Toast.LENGTH_SHORT).show();
+                    break;
+                case SET_VISIBILITY:
+                    if (tip.getVisibility() == View.GONE) {
+                        tip.setVisibility(View.VISIBLE);
+                    }else {
+                        tip.setVisibility(View.INVISIBLE);
+                    }
                     break;
                 default:
                     break;
@@ -88,53 +99,19 @@ public class CommentListActivity extends AppCompatActivity {
                 try {
                     response = mClient.newCall(request).execute();
                     if (response.isSuccessful()) {
-                        try {
                             String response2 = response.body().string();
-                            JSONObject jsonObject = new JSONObject(response2);
                             Log.i(TAG, response2);
-                            int  status = jsonObject.getInt("msgCode");
-                            Log.i("123", status + "");
-                            msg = jsonObject.getString("msg");
-
-                            if (status == 501) {
-                                JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                if (jsonArray.length() == 0) {
-
-                                }else{
-
-                                    for(int i = 0;i<jsonArray.length();i++){
-                                        JSONObject data = jsonArray.getJSONObject(i);
-                                        Comment comment = new Comment();
-                                        String id = data.getString("id");
-                                        String storey = data.getString("storey");
-                                        String content = data.getString("content");
-                                        String comment_time = data.getString("commentTime");
-                                        String senderImage = data.getString("senderImage");
-                                        String senderAccount = data.getString("senderAccount");
-                                        String nickname = "";
-                                        if (data.getString("commentType").equals("0")) {
-                                            nickname = data.getString("senderNickName") + ":";
-                                        }else{
-                                            nickname = data.getString("senderNickName") + " 回复 " + data.getString("receiverNickName") + ":";
-                                        }
-                                        comment.setCommentId(id);
-                                        comment.setStorey(storey);
-                                        comment.setContent(content);
-                                        comment.setCommentTime(comment_time);
-                                        comment.setNickname(nickname);
-                                        comment.setUserHeads(senderImage);
-                                        comment.setSenderAccount(senderAccount);
-                                        mCommentList.add(comment);
-
-                                    }
-                                }
-                            }else if(status == 502){
-                                handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                            CommentJson commentJson  = mGson.fromJson(response2, CommentJson.class);
+                            if (commentJson.getMsgCode() == 501) {
+                                mCommentList = commentJson.getData();
+                            }else if(commentJson.getMsgCode() == 502){
+                                handler.obtainMessage(SHOW_TOAST,commentJson.getMsg()).sendToTarget();
                             }
-
-                        } catch (JSONException je) {
-                            je.printStackTrace();
+                        if (commentJson.getMsgCode() == 507) {
+                            handler.obtainMessage(SET_VISIBILITY,commentJson.getMsg()).sendToTarget();
                         }
+
+
                     } else {
                         throw new IOException("Unexpected code " + response);
                     }
@@ -148,6 +125,7 @@ public class CommentListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
+        tip = (TextView) findViewById(R.id.tip_tv);
         comment = (TextView) findViewById(R.id.comment);
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,12 +137,11 @@ public class CommentListActivity extends AppCompatActivity {
         Bundle bundle = this.getIntent().getExtras();
         activity_id = bundle.getString(ActivityContentActivity.ACTIVITY_ID);
         Log.i(TAG, activity_id);
+        getComment();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.comment_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(CommentListActivity.this));
         mRecyclerView.setAdapter(new CommentListAdapter());
-
-        getComment();
     }
 
     class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.MyViewHolder>
@@ -205,7 +182,7 @@ public class CommentListActivity extends AppCompatActivity {
             return mCommentList.size();
         }
 
-        public void showDeleteCommentDialog(final Comment comment) {
+        public void showDeleteCommentDialog(final Comment comment1) {
             AlertDialog.Builder builder = new AlertDialog.Builder(CommentListActivity.this)
                     .setTitle("确定删除此条评论？")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -215,7 +192,7 @@ public class CommentListActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
 
-                                    String requestURL = "http://139.199.180.51/meetyou/public/deleteComment?comment_id=" + comment.getCommentId();
+                                    String requestURL = "http://139.199.180.51/meetyou/public/deleteComment?comment_id=" + comment1.getCommentId();
                                     final Request request = new Request.Builder()
                                             .get()
                                             .tag(this)
@@ -235,6 +212,8 @@ public class CommentListActivity extends AppCompatActivity {
                                                 msg = jsonObject.getString("msg");
                                                 if (status == 505) {
                                                     handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                                                    Intent i = new Intent(CommentListActivity.this, ActivityContentActivity.class);
+                                                    startActivity(i);
                                                 }else if(status == 506){
                                                     handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
                                                 }
@@ -250,8 +229,6 @@ public class CommentListActivity extends AppCompatActivity {
                                     }
                                 }
                             }).start();
-                            Intent i = new Intent(CommentListActivity.this, ActivityContentActivity.class);
-                            startActivity(i);
                         }
                     })
                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {

@@ -38,6 +38,7 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
     private static final int SET_VISIBLITY = 12;
     public static final String ACTIVITY_ID = "ACTIVITY_ID";
 
+
     HuodongDetailsJson huodongDetailsJson;
 
     String activityId;
@@ -143,6 +144,11 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
             mActivityTheme.setText(detailsJson.getActivityInfo().activity_theme);
             mActivityTime.setText(detailsJson.getActivityInfo().activity_time);
             new DownloadImageTask(mHeads).execute(detailsJson.getActivityInfo().activity_releaser_headPic);
+            if (detailsJson.getActivityInfo().isParticipated.equals("no")) {
+                concern.setText("关注");
+            }else{
+                concern.setText("取消关注");
+            }
 
             othersUserAccount = detailsJson.getActivityInfo().activity_releaser_account;
         }
@@ -156,8 +162,11 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
                     Toast.makeText(ActivityContentActivity.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
                     break;
                 case SET_VISIBLITY:
-                   concern.setEnabled(false);
-                    concern.setVisibility(View.GONE);
+                    if (concern.getText().toString().equals("关注")) {
+                        concern.setText("取消关注");
+                    }else{
+                        concern.setText("关注");
+                    }
                     break;
                 default:
                     break;
@@ -168,17 +177,18 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.content_concern_tv:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String account = PreferenceUtil.getString(ActivityContentActivity.this, PreferenceUtil.ACCOUNT);
-                        String requestURL = " http://139.199.180.51/meetyou/public/participate?activity_id="+activityId+"&user_account=" + account;
+                if (concern.getText().toString().equals("关注")) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String account = PreferenceUtil.getString(ActivityContentActivity.this, PreferenceUtil.ACCOUNT);
+                            String requestURL = " http://139.199.180.51/meetyou/public/participate?activity_id="+activityId+"&user_account=" + account;
 
-                        final Request request = new Request.Builder()
-                                .get()
-                                .tag(this)
-                                .url(requestURL)
-                                .build();
+                            final Request request = new Request.Builder()
+                                    .get()
+                                    .tag(this)
+                                    .url(requestURL)
+                                    .build();
 
                         Response response;
                         try {
@@ -192,24 +202,68 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
                                     Log.i("123", status + "");
                                     String msg = jsonObject.getString("msg");
 
-                                    if (status == 401) {
-                                        handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
-                                       handler.obtainMessage(SET_VISIBLITY,msg).sendToTarget();
-                                    }else if(status == 402){
-                                        handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
-                                    }
+                                        if (status == 401) {
+                                            handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                                            handler.obtainMessage(SET_VISIBLITY,msg).sendToTarget();
+                                        }else if(status == 402){
+                                            handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                                        }
 
-                                } catch (JSONException je) {
-                                    je.printStackTrace();
+                                    } catch (JSONException je) {
+                                        je.printStackTrace();
+                                    }
+                                } else {
+                                    throw new IOException("Unexpected code " + response);
                                 }
-                            } else {
-                                throw new IOException("Unexpected code " + response);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
-                    }
-                }).start();
+                    }).start();
+                }else if (concern.getText().toString().equals("取消关注")) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String account = PreferenceUtil.getString(ActivityContentActivity.this, PreferenceUtil.ACCOUNT);
+                            String requestURL = " http://139.199.180.51/meetyou/public/participateCancel?activity_id="+activityId+"&user_account=" + account;
+
+                            final Request request = new Request.Builder()
+                                    .get()
+                                    .tag(this)
+                                    .url(requestURL)
+                                    .build();
+
+                            Response response;
+                            try {
+                                response = mClient.newCall(request).execute();
+                                if (response.isSuccessful()) {
+                                    try {
+                                        String response2 = response.body().string();
+                                        JSONObject jsonObject = new JSONObject(response2);
+                                        Log.i(TAG, response2);
+                                        int  status = jsonObject.getInt("msgCode");
+                                        Log.i("123", status + "");
+                                        String msg = jsonObject.getString("msg");
+
+                                        if (status == 407) {
+                                            handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                                            handler.obtainMessage(SET_VISIBLITY,msg).sendToTarget();
+                                        }else if(status == 408){
+                                            handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                                        }
+
+                                    } catch (JSONException je) {
+                                        je.printStackTrace();
+                                    }
+                                } else {
+                                    throw new IOException("Unexpected code " + response);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+                }
                 break;
             case R.id.content_comment_tv:
                 Intent i = new Intent(ActivityContentActivity.this, CommentListActivity.class);

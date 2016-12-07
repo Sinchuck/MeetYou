@@ -71,7 +71,7 @@ public class AnswerDialogFragment extends DialogFragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        View view = inflater.inflate(R.layout.fragment_nickname_dialog, container);
+        View view = inflater.inflate(R.layout.fragment_comment_dialog, container);
         cancel_tv = (TextView)view.findViewById(R.id.cancel_save_nickname_bt);
         sure_tv = (TextView) view.findViewById(R.id.save_nickname_bt);
         comment_edit = (EditText) view.findViewById(R.id.edit_user_nickname);
@@ -151,9 +151,9 @@ public class AnswerDialogFragment extends DialogFragment implements View.OnClick
             case R.id.save_nickname_bt:
                 saveComment();
                 this.dismiss();
-//                Intent i = new Intent(getActivity(), ActivityContentActivity.class);
-//                startActivity(i);
-//                Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+                Intent i = new Intent(getActivity(), ActivityContentActivity.class);
+                startActivity(i);
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
                 break;
         }
     }
