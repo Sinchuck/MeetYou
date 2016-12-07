@@ -14,6 +14,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.model.ConcernActivityJson;
+import com.example.yang.meetyou.model.ConcernFriendJson;
+import com.example.yang.meetyou.model.Huodong;
+import com.example.yang.meetyou.model.Person;
 import com.example.yang.meetyou.publish.PublishActivity;
 import com.example.yang.meetyou.userMessageCenter.OthersPersonalMessageActivity;
 import com.example.yang.meetyou.userMessageCenter.PersonalCenterActivity;
