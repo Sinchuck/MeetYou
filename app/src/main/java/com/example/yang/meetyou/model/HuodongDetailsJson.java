@@ -1,4 +1,4 @@
-package com.example.yang.meetyou;
+package com.example.yang.meetyou.model;
 
 /**
  * Created by Sinchuck on 16/12/5.

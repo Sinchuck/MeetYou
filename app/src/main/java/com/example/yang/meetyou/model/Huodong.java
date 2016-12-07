@@ -1,4 +1,4 @@
-package com.example.yang.meetyou;
+package com.example.yang.meetyou.model;
 
 public class Huodong {
 

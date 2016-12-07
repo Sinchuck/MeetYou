@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.model.HuodongDetailsJson;
 import com.example.yang.meetyou.userMessageCenter.OthersPersonalMessageActivity;
 import com.example.yang.meetyou.utils.DownloadImageTask;
 import com.example.yang.meetyou.utils.PreferenceUtil;
@@ -145,9 +146,9 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
             mActivityTime.setText(detailsJson.getActivityInfo().activity_time);
             new DownloadImageTask(mHeads).execute(detailsJson.getActivityInfo().activity_releaser_headPic);
             if (detailsJson.getActivityInfo().isParticipated.equals("no")) {
-                concern.setText("关注");
+                concern.setText("参加");
             }else{
-                concern.setText("取消关注");
+                concern.setText("取消参加");
             }
 
             othersUserAccount = detailsJson.getActivityInfo().activity_releaser_account;
@@ -162,10 +163,10 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
                     Toast.makeText(ActivityContentActivity.this, msg.obj.toString(), Toast.LENGTH_SHORT).show();
                     break;
                 case SET_VISIBLITY:
-                    if (concern.getText().toString().equals("关注")) {
-                        concern.setText("取消关注");
+                    if (concern.getText().toString().equals("参加")) {
+                        concern.setText("取消参加");
                     }else{
-                        concern.setText("关注");
+                        concern.setText("参加");
                     }
                     break;
                 default:
@@ -177,7 +178,7 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.content_concern_tv:
-                if (concern.getText().toString().equals("关注")) {
+                if (concern.getText().toString().equals("参加")) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -220,7 +221,7 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
                             }
                         }
                     }).start();
-                }else if (concern.getText().toString().equals("取消关注")) {
+                }else if (concern.getText().toString().equals("取消参加")) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {

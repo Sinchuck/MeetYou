@@ -1,4 +1,4 @@
-package com.example.yang.meetyou;
+package com.example.yang.meetyou.model;
 
 /**
  * Created by Yang on 2016/9/25.

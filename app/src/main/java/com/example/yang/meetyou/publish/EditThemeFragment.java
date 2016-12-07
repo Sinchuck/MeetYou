@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ public class EditThemeFragment extends DialogFragment implements View.OnClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = inflater.inflate(R.layout.fragment_edit_theme, container);
         cancel_tv = (TextView)view.findViewById(R.id.cancel_edit_theme_bt);
         sure_tv = (TextView) view.findViewById(R.id.save_theme_bt);

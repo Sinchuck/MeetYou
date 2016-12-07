@@ -1,4 +1,6 @@
-package com.example.yang.meetyou;
+package com.example.yang.meetyou.model;
+
+import com.example.yang.meetyou.model.Person;
 
 import java.util.List;
 

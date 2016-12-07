@@ -1,6 +1,4 @@
-package com.example.yang.meetyou;
-
-import android.graphics.Bitmap;
+package com.example.yang.meetyou.model;
 
 /**
  * Created by Yang on 2016/12/5.

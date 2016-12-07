@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.model.Comment;
+import com.example.yang.meetyou.model.CommentJson;
 import com.example.yang.meetyou.utils.DownloadImageTask;
 import com.example.yang.meetyou.utils.PreferenceUtil;
 import com.google.gson.Gson;
@@ -40,11 +42,11 @@ import okhttp3.Response;
 public class CommentListActivity extends AppCompatActivity {
     private static final int SHOW_TOAST = 11;
     private static final int SET_VISIBILITY = 12;
+    private static final int REFRESH_COMMENT = 13;
     private static final String TAG = "CommentListActivity";
 
 
     private RecyclerView mRecyclerView;
-    private CommentListAdapter mCommentListAdapter;
     private List<Comment> mCommentList = new ArrayList<>();
 
     private TextView comment;
@@ -57,6 +59,7 @@ public class CommentListActivity extends AppCompatActivity {
 
     private Bitmap[] bitmaps;
     private Gson mGson = new Gson();
+    private CommentListAdapter mCommentListAdapter;
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -70,6 +73,9 @@ public class CommentListActivity extends AppCompatActivity {
                     }else {
                         tip.setVisibility(View.INVISIBLE);
                     }
+                    break;
+                case REFRESH_COMMENT:
+                    mRecyclerView.setAdapter(new CommentListAdapter());
                     break;
                 default:
                     break;
@@ -103,6 +109,7 @@ public class CommentListActivity extends AppCompatActivity {
                             CommentJson commentJson  = mGson.fromJson(response2, CommentJson.class);
                             if (commentJson.getMsgCode() == 501) {
                                 mCommentList = commentJson.getData();
+                                handler.obtainMessage(REFRESH_COMMENT,commentJson.getMsg()).sendToTarget();
                             }else if(commentJson.getMsgCode() == 502){
                                 handler.obtainMessage(SHOW_TOAST,commentJson.getMsg()).sendToTarget();
                             }
@@ -160,7 +167,8 @@ public class CommentListActivity extends AppCompatActivity {
         {
             final Comment comment = mCommentList.get(position);
 
-            holder.bindComment(comment.getUserHeads(), comment.getNickname(), comment.getContent(), comment.getCommentTime());
+            holder.bindComment(comment.getUserHeads(), comment.getNickname(), comment.getContent(), comment.getCommentTime(),
+                    comment.getStorey());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -247,6 +255,7 @@ public class CommentListActivity extends AppCompatActivity {
             TextView user_nickname;
             TextView user_comment;
             TextView comment_time;
+            TextView comment_storey;
             public MyViewHolder(View view)
             {
                 super(view);
@@ -254,13 +263,16 @@ public class CommentListActivity extends AppCompatActivity {
                 user_nickname = (TextView) view.findViewById(R.id.comment_user_nickname);
                 user_comment = (TextView) view.findViewById(R.id.comment_user_comment);
                 comment_time = (TextView) view.findViewById(R.id.comment_time_tv);
+                comment_storey = (TextView) view.findViewById(R.id.comment_storey);
             }
 
-            public void bindComment(String user_image, String nickname, String comment,String user_comment_time) {
+            public void bindComment(String user_image, String nickname, String comment,String user_comment_time,
+                                    String commentStorey) {
                 new DownloadImageTask(user_head).execute(user_image);
                 user_nickname.setText(nickname);
                 user_comment.setText(comment);
                 comment_time.setText(user_comment_time);
+                comment_storey.setText(commentStorey);
             }
         }
     }

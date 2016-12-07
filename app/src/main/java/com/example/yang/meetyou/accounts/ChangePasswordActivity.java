@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -12,9 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.yang.meetyou.HomePageActivity;
 import com.example.yang.meetyou.R;
-import com.example.yang.meetyou.utils.PreferenceUtil;
 import com.example.yang.meetyou.views.CleanEditText;
 
 import org.json.JSONException;
@@ -135,8 +132,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 Toast.makeText(ChangePasswordActivity.this, "用户旧密码输入错误", Toast.LENGTH_SHORT).show();
             } else if (status == 304) {
                 Toast.makeText(ChangePasswordActivity.this, "用户密码更改成功", Toast.LENGTH_SHORT).show();
-                PreferenceUtil.setString(ChangePasswordActivity.this, PreferenceUtil.ACCOUNT, account);
-                Intent intent = new Intent(ChangePasswordActivity.this, HomePageActivity.class);
+                Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             }

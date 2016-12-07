@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.model.ConcernActivityJson;
+import com.example.yang.meetyou.model.Huodong;
 import com.example.yang.meetyou.utils.PreferenceUtil;
 import com.google.gson.Gson;
 

@@ -25,6 +25,28 @@
     <string name="register_nickname">昵称</string>
     <string name="register_phone_number">手机号码</string>
     <string name="build_account">创建账号</string>
+    <string name="search">Search</string>
+    <string name="classify_search">Classify Search</string>
+    <string name="concern_activity">关注的活动</string>
+    <string name="concern_friend">关注的好友</string>
+    <string name="user_account">账号:</string>
+    <string name="activity_theme">主题:</string>
+    <string name="activity_time">活动时间: </string>
+    <string name="person_number">人数: </string>
+    <string name="watch_comment">查看评论</string>
+    <string name="take_photo">拍照</string>
+    <string name="choose_photo_from_album">从手机相册中选择</string>
+    <string name="head_picture">头像</string>
+    <string name="account">账号</string>
+    <string name="gender">性别</string>
+    <string name="contact_way">联系方式</string>
+    <string name="signature">个性签名</string>
+    <string name="published_activities">已发布的活动</string>
+    <string name="is_user_info_public">用户信息是否开放</string>
+    <string name="social_contact">社交</string>
+    <string name="attend">参加</string>
+    <string name="cancel_attend">取消参加</string>
+    <string name="yes">是</string>
     <string-array name="gender">
         <item>男</item>
         <item>女</item>

@@ -52,7 +52,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private DatePickerDialog mDatePickerDialog;
     private String dateString;
     private String activity_kind;
-    private String num_of_activity_person;
+    private String num_of_activity_person = "1";
     private  String theme;
     private  String content;
     private String msg;
@@ -78,6 +78,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         theme_et.setText("");
         content_et.setText("");
 
+        dateString = new SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+        activity_time_tv.setText(dateString);
         mHomePage.setOnClickListener(this);
         mConcern.setOnClickListener(this);
         mPublish.setOnClickListener(this);

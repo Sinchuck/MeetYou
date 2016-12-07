@@ -14,118 +14,122 @@
         toolbar:titleTextColor="#ffffff">
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
-        android:id="@+id/linear_personal"
+    <ScrollView
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="20dp"
-        android:padding="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#fff">
-        <ImageView
-            android:id="@+id/iv_head"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@mipmap/heads"/>
-        <LinearLayout
-            android:layout_marginLeft="15dp"
-            android:layout_width="200dp"
-            android:layout_height="80dp"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_nickname"
-                android:paddingTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text=""
-                android:singleLine="true"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:textSize="16sp"/>
-
-           <LinearLayout
-               android:layout_width="wrap_content"
-               android:layout_height="30dp"
-               android:orientation="horizontal">
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="账号:"
-                   android:textSize="14sp"
-                   android:layout_gravity="center"
-                   android:textColor="@color/colorId"
-                   />
-               <TextView
-                   android:id="@+id/tv_account"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text=""
-                   android:textSize="14sp"
-                   android:layout_gravity="center"
-                   android:textColor="@color/colorId"/>
-           </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
-    
-    <TextView
-        android:id="@+id/change_password"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/linear_personal"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="修改密码"
-        android:gravity="center"
-        android:background="#fff"
-        android:textSize="25sp"
-        />
-
-
-    <TextView
-        android:id="@+id/tv_activity_has_published_by_user"
-        android:layout_below="@+id/change_password"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#fff"
-        android:text="已发布的活动"
-        android:gravity="center"
-        android:textSize="25sp"/>
-
-    <TextView
-        android:id="@+id/tv_setting"
-        android:layout_below="@id/tv_activity_has_published_by_user"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="设置"
-        android:background="#fff"
-        android:gravity="center"
-        android:textSize="25sp"
-        />
-
-    <TextView
-        android:id="@+id/tv_cancel"
-        android:layout_below="@+id/tv_setting"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:text="注销"
-        android:textSize="25dp"
-        android:textColor="@color/colorCancel"
-        android:gravity="center"
-        android:background="@drawable/bg_cancel"/>
-
-    <View
-        android:id="@+id/view_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
         android:layout_above="@+id/menuBar"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/linear_personal"
+                android:layout_marginTop="20dp"
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#fff">
+                <ImageView
+                    android:id="@+id/iv_head"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@mipmap/heads"/>
+                <LinearLayout
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="200dp"
+                    android:layout_height="80dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tv_nickname"
+                        android:paddingTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text=""
+                        android:singleLine="true"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center"
+                        android:textSize="16sp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/user_account"
+                            android:textSize="14sp"
+                            android:layout_gravity="center"
+                            android:textColor="@color/colorId"
+                            />
+                        <TextView
+                            android:id="@+id/tv_account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="14sp"
+                            android:layout_gravity="center"
+                            android:textColor="@color/colorId"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/change_password"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/linear_personal"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="修改密码"
+                android:gravity="center"
+                android:background="#fff"
+                android:textSize="25sp"
+                />
+
+
+            <TextView
+                android:id="@+id/tv_activity_has_published_by_user"
+                android:layout_below="@+id/change_password"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="#fff"
+                android:text="已发布的活动"
+                android:gravity="center"
+                android:textSize="25sp"/>
+
+            <TextView
+                android:id="@+id/tv_setting"
+                android:layout_below="@id/tv_activity_has_published_by_user"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="设置"
+                android:background="#fff"
+                android:gravity="center"
+                android:textSize="25sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_cancel"
+                android:layout_below="@+id/tv_setting"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:text="注销"
+                android:textSize="25dp"
+                android:textColor="@color/colorCancel"
+                android:gravity="center"
+                android:background="@drawable/bg_cancel"/>
+        </RelativeLayout>
+    </ScrollView>
+
     <LinearLayout
         android:id="@+id/menuBar"
         android:background="@color/colorMenuBar"
@@ -150,7 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="20dp"
-            android:text="@string/concern"
+            android:text="@string/social_contact"
             android:gravity="center"/>
         <TextView
             android:id="@+id/tv_publish"

@@ -42,6 +42,7 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
     private static final int SET_CONTACT = 16;
     private static final int SET_SIGNATURE = 17;
     private static final int SET_IS_FOLLOWED = 18;
+    private static final int SET_IS_PRIVACY = 19;
 
     ImageView mOthersImage;
 
@@ -218,6 +219,7 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
                                 handler.obtainMessage(SET_CONTACT,jsonObject1.getString("user_contacts")).sendToTarget();
                                 handler.obtainMessage(SET_SIGNATURE, jsonObject1.getString("user_description")).sendToTarget();
                                 handler.obtainMessage(SET_IS_FOLLOWED, jsonObject1.getString("isFollowed")).sendToTarget();
+                                handler.obtainMessage(SET_IS_PRIVACY, jsonObject1.getString("user_privacy")).sendToTarget();
                                 Log.i(TAG, jsonObject1.getString("isFollowed"));
                             }else if(status == 302){
                                 handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
@@ -272,6 +274,14 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
                         mWatchOthers.setText("取消关注");
                     }
                     break;
+
+                case SET_IS_PRIVACY:
+                    if (msg.obj.toString().equals("0")) {
+
+                    } else {
+                        otherPublishedActivityTextView.setText("用户已隐藏个人信息");
+                        otherPublishedActivityTextView.setClickable(false);
+                    }
 
                 default:
                     break;

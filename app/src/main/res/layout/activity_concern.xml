@@ -28,7 +28,7 @@
             android:padding="5dp"
             android:gravity="center"
             android:layout_marginLeft="30dp"
-            android:text="关注的活动"
+            android:text="@string/concern_activity"
             android:background="@drawable/bg_concern_activity"
             android:textSize="20sp"
             />
@@ -40,7 +40,7 @@
             android:gravity="center"
             android:layout_alignParentRight="true"
             android:layout_marginRight="30dp"
-            android:text="关注的好友"
+            android:text="@string/concern_friend"
             android:background="@drawable/bg_concern_activity"
             android:textSize="20sp"/>
 
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="20dp"
-            android:text="@string/concern"
+            android:text="@string/social_contact"
             android:textColor="@color/menuSelected"
             android:gravity="center"/>
         <TextView

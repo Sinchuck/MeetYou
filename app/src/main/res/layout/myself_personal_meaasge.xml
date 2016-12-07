@@ -28,7 +28,7 @@
             android:layout_height="50dp"
             android:textSize="20sp"
             android:textColor="#000"
-            android:text="头像"
+            android:text="@string/head_picture"
             android:layout_gravity ="center"
             android:gravity="center"
 
@@ -58,7 +58,7 @@
             android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="昵称"
+            android:text="@string/register_nickname"
             android:textColor="#000"
             android:textSize="18sp"/>
         <TextView
@@ -67,13 +67,11 @@
             android:layout_marginLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
             android:gravity="right"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_alignParentRight="true"
-            android:text="我是谁"
             android:textSize="18sp"/>
     </RelativeLayout>
 
@@ -90,7 +88,7 @@
             android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="账号"
+            android:text="@string/account"
             android:textColor="#000"
             android:textSize="20sp"/>
         <TextView
@@ -101,7 +99,6 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_alignParentRight="true"
-            android:text="201430614243"
             android:textSize="18sp"/>
     </RelativeLayout>
 
@@ -118,7 +115,7 @@
             android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="性别"
+            android:text="@string/gender"
             android:textColor="#000"
             android:textSize="20sp"/>
         <TextView
@@ -130,7 +127,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:gravity="center_vertical"
-            android:text="未知"
             android:textSize="18sp"/>
 
     </RelativeLayout>
@@ -149,7 +145,7 @@
             android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="联系方式"
+            android:text="@string/contact_way"
             android:textColor="#000"
             android:textSize="18sp"/>
         <TextView
@@ -158,13 +154,11 @@
             android:layout_marginLeft="50dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
             android:gravity="right"
             android:layout_marginRight="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_alignParentRight="true"
-            android:text="18888888888"
             android:textSize="18sp"/>
     </RelativeLayout>
 
@@ -182,7 +176,7 @@
             android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="个性签名"
+            android:text="@string/signature"
             android:textColor="#000"
             android:textSize="20sp"/>
         <TextView
@@ -196,8 +190,6 @@
             android:layout_marginBottom="10dp"
             android:layout_alignParentRight="true"
             android:gravity="right"
-            android:text="来单挑啊..."
-            android:singleLine="true"
             android:textSize="18sp"/>
     </RelativeLayout>
 
@@ -215,7 +207,7 @@
             android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="用户信息是否开放"
+            android:text="@string/is_user_info_public"
             android:gravity="center_vertical"
             android:textColor="#000"
             android:textSize="20sp"/>
@@ -223,7 +215,7 @@
             android:id="@+id/bt_privacy"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:text="是"
+            android:text="@string/yes"
             android:textSize="18sp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"

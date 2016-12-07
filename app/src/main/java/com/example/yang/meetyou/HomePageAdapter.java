@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.yang.meetyou.model.Huodong;
 import com.example.yang.meetyou.utils.DownloadImageTask;
 
 import java.util.List;

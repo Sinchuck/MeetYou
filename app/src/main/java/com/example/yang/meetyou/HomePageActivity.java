@@ -23,6 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yang.meetyou.accounts.LoginActivity;
+import com.example.yang.meetyou.model.HomePageJson;
+import com.example.yang.meetyou.model.Huodong;
+import com.example.yang.meetyou.model.SearchJson;
 import com.example.yang.meetyou.publish.PublishActivity;
 import com.example.yang.meetyou.userMessageCenter.PersonalCenterActivity;
 import com.google.gson.Gson;

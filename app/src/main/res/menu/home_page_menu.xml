@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/search"
-          android:title="Search"
+          android:title="@string/search"
           android:icon="@drawable/ic_search_white_24dp"
           app:actionViewClass="android.support.v7.widget.SearchView"
           app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/classify_search"
-          android:title="Classify Search"
+          android:title="@string/classify_search"
           android:icon="@drawable/ic_menu_down"
           app:showAsAction="ifRoom"/>
 

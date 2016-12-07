@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:id="@+id/menuBar"
+              android:background="@color/colorMenuBar"
+              android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tv_home_page"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/homePage"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:textColor="@color/menuSelected"/>
+
+    <TextView
+        android:id="@+id/tv_concern"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="20dp"
+        android:text="@string/social_contact"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/tv_publish"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="20dp"
+        android:text="@string/publish"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/tv_personalCenter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="20dp"
+        android:text="@string/personCenter"
+        android:gravity="center"/>
+
+</LinearLayout>
