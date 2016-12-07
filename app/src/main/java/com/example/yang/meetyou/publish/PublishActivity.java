@@ -63,7 +63,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.publish);
+        setContentView(R.layout.activity_publish);
         mHomePage = (TextView) findViewById(R.id.tv_home_page);
         mConcern = (TextView) findViewById(R.id.tv_concern);
         mPersonalCenter = (TextView) findViewById(R.id.tv_personalCenter);

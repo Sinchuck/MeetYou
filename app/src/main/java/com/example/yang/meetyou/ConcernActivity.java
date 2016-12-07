@@ -55,7 +55,7 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.concern);
+        setContentView(R.layout.activity_concern);
 
         mActivityListView = (ListView) findViewById(R.id.list_view_concern_activity);
         mFriendListView = (ListView)findViewById(R.id.list_view_concern_friend);

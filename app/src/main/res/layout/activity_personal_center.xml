@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:toolbar="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
     android:background="@color/personalCenterBackground">
-    <include
-        android:id="@+id/application_title"
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        layout="@layout/application_title"/>
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        toolbar:title="@string/app_name"
+        toolbar:titleTextColor="#ffffff">
+    </android.support.v7.widget.Toolbar>
 
     <LinearLayout
         android:id="@+id/linear_personal"
-        android:layout_below="@+id/application_title"
+        android:layout_below="@+id/toolbar"
         android:layout_marginTop="20dp"
         android:padding="20dp"
         android:layout_width="match_parent"
@@ -66,7 +71,7 @@
     </LinearLayout>
     
     <TextView
-        android:id="@+id/changePassword"
+        android:id="@+id/change_password"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/linear_personal"
         android:layout_width="match_parent"
@@ -80,7 +85,7 @@
 
     <TextView
         android:id="@+id/tv_activity_has_published_by_user"
-        android:layout_below="@+id/changePassword"
+        android:layout_below="@+id/change_password"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"

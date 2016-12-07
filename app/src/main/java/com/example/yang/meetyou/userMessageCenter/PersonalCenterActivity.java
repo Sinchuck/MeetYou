@@ -18,6 +18,7 @@ import com.example.yang.meetyou.ActivityHasPublishedByUserActivity;
 import com.example.yang.meetyou.ConcernActivity;
 import com.example.yang.meetyou.HomePageActivity;
 import com.example.yang.meetyou.R;
+import com.example.yang.meetyou.accounts.ChangePasswordActivity;
 import com.example.yang.meetyou.accounts.LoginActivity;
 import com.example.yang.meetyou.publish.PublishActivity;
 import com.example.yang.meetyou.utils.DownloadImageTask;
@@ -50,6 +51,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
     private LinearLayout mHeadsLinear;
     private TextView mCancelText;
     private TextView mActivityHasPublishedByUserText;
+    private TextView mChangePassword;
 
     private TextView account_tv;
     private TextView nickname_tv;
@@ -135,7 +137,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.personal_center);
+        setContentView(R.layout.activity_personal_center);
         mHomePage = (TextView) findViewById(R.id.tv_home_page);
         mConcern = (TextView) findViewById(R.id.tv_concern);
         mPersonalCenter = (TextView) findViewById(R.id.tv_personalCenter);
@@ -143,6 +145,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
         mHeadsLinear = (LinearLayout)findViewById(R.id.linear_personal);
         mCancelText = (TextView) findViewById(R.id.tv_cancel);
         mActivityHasPublishedByUserText = (TextView) findViewById(R.id.tv_activity_has_published_by_user);
+        mChangePassword = (TextView) findViewById(R.id.change_password);
         nickname_tv = (TextView) findViewById(R.id.tv_nickname);
         account_tv = (TextView) findViewById(R.id.tv_account);
         head_iv = (ImageView) findViewById(R.id.iv_head);
@@ -155,6 +158,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
         mHeadsLinear.setOnClickListener(this);
         mCancelText.setOnClickListener(this);
         mActivityHasPublishedByUserText.setOnClickListener(this);
+        mChangePassword.setOnClickListener(this);
 
     }
     @Override
@@ -190,6 +194,14 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
                 Intent intent = new Intent(PersonalCenterActivity.this, ActivityHasPublishedByUserActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
+                break;
+            case R.id.change_password:
+                Intent changeIntent = new Intent(PersonalCenterActivity.this, ChangePasswordActivity.class);
+                startActivity(changeIntent);
+                finish();
+                break;
+
+            default:
                 break;
         }
     }
