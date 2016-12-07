@@ -8,7 +8,7 @@ public class HuodongDetailsJson {
     private int msgCode;
     private String msg;
 
-    ActivityInfo activityInfo = new ActivityInfo();
+    private ActivityInfo activityInfo;
 
     public int getMsgCode() {
         return msgCode;
@@ -72,7 +72,7 @@ public class HuodongDetailsJson {
          public String activity_comment_count;
          public String activity_participants_count;
          public String activity_participants_max_count;
-         public String activity_releaser_account;
+         public String  activity_releaser_account;
          public String activity_releaser_headPic;
          public String activity_releaser_nickName;
 

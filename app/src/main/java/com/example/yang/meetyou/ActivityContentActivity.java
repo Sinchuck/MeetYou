@@ -214,7 +214,7 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
                             }
                         }
                     }).start();
-                }else {
+                }else if (concern.getText().toString().equals("取消关注")) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
