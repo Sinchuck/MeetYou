@@ -211,6 +211,7 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_concernActivity:
+                new RefreshConcernHuodong().execute();
                 mFriendListView.setVisibility(view.GONE);
                 mActivityListView.setVisibility(View.VISIBLE);
                 tv_concernActivity.setTextColor(Color.rgb(34,144, 175));

@@ -1,6 +1,7 @@
 package com.example.yang.meetyou;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -150,8 +151,12 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
             case R.id.save_nickname_bt:
                 saveComment();
                 this.dismiss();
+                Bundle bundle = new Bundle();
+                bundle.putString("activityId", CommentListActivity.activity_id);
                 Intent i = new Intent(getActivity(), ActivityContentActivity.class);
+                i.putExtras(bundle);
                 startActivity(i);
+
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
                 break;
         }

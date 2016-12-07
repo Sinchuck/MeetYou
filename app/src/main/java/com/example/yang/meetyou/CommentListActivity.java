@@ -23,7 +23,6 @@ import com.example.yang.meetyou.utils.DownloadImageTask;
 import com.example.yang.meetyou.utils.PreferenceUtil;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -212,7 +211,10 @@ public class CommentListActivity extends AppCompatActivity {
                                                 msg = jsonObject.getString("msg");
                                                 if (status == 505) {
                                                     handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putString("activityId", CommentListActivity.activity_id);
                                                     Intent i = new Intent(CommentListActivity.this, ActivityContentActivity.class);
+                                                    i.putExtras(bundle);
                                                     startActivity(i);
                                                 }else if(status == 506){
                                                     handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();

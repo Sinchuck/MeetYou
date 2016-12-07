@@ -25,14 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".HomePageActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".userMessageCenter.PersonalCenterActivity"
-                  android:launchMode="singleTask"/>
-        <activity android:name=".publish.PublishActivity"
-                  android:launchMode="singleTask"/>
-        <activity android:name=".ConcernActivity"
-                  android:launchMode="singleTask"/>
+        <activity android:name=".HomePageActivity"/>
+        <activity android:name=".userMessageCenter.PersonalCenterActivity"/>
+        <activity android:name=".publish.PublishActivity"/>
+        <activity android:name=".ConcernActivity"/>
         <activity android:name=".ActivityContentActivity"/>
         <activity android:name=".userMessageCenter.OthersPersonalMessageActivity"/>
         <activity android:name=".userMessageCenter.MyselfPersonalMessageActivity"/>
@@ -40,7 +36,7 @@
         <activity android:name=".accounts.SignUpActivity">
         </activity>
         <activity android:name=".CommentListActivity"
-            android:launchMode="singleTask"/>
+           />
         <activity android:name=".accounts.ChangePasswordActivity"/>
     </application>
 

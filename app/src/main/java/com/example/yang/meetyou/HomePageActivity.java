@@ -99,7 +99,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.i("ACTIVITY_ID", mHuodongList.get(i).getActivityId());
                 Bundle bundle = new Bundle();
-                bundle.putString("ACTIVITY_ID", mHuodongList.get(i).getActivityId());
+                bundle.putString("activityId", mHuodongList.get(i).getActivityId());
                 Intent a = new Intent(HomePageActivity.this, ActivityContentActivity.class);
                 a.putExtras(bundle);
                 startActivity(a);

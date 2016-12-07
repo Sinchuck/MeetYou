@@ -7,7 +7,7 @@ package com.example.yang.meetyou;
 public class HuodongDetailsJson {
     private int msgCode;
     private String msg;
-    ActivityInfo activityInfo;
+    ActivityInfo activityInfo  = new ActivityInfo();
 
     public int getMsgCode() {
         return msgCode;
