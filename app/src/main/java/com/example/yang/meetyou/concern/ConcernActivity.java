@@ -1,4 +1,4 @@
-package com.example.yang.meetyou;
+package com.example.yang.meetyou.concern;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,6 +14,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.homePage.HomePageAdapter;
+import com.example.yang.meetyou.R;
+import com.example.yang.meetyou.homePage.ActivityContentActivity;
+import com.example.yang.meetyou.homePage.HomePageActivity;
 import com.example.yang.meetyou.model.ConcernActivityJson;
 import com.example.yang.meetyou.model.ConcernFriendJson;
 import com.example.yang.meetyou.model.Huodong;

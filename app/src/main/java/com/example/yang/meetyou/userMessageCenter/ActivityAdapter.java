@@ -1,4 +1,4 @@
-package com.example.yang.meetyou;
+package com.example.yang.meetyou.userMessageCenter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.model.Huodong;
 
 import java.util.List;

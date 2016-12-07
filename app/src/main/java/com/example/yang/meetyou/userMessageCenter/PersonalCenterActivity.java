@@ -14,9 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.yang.meetyou.ActivityHasPublishedByUserActivity;
-import com.example.yang.meetyou.ConcernActivity;
-import com.example.yang.meetyou.HomePageActivity;
+import com.example.yang.meetyou.concern.ConcernActivity;
+import com.example.yang.meetyou.homePage.HomePageActivity;
 import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.accounts.ChangePasswordActivity;
 import com.example.yang.meetyou.accounts.LoginActivity;

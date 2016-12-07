@@ -15,7 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.yang.meetyou.HomePageActivity;
+import com.example.yang.meetyou.homePage.HomePageActivity;
 import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.utils.PreferenceUtil;
 import com.example.yang.meetyou.utils.RegexUtils;

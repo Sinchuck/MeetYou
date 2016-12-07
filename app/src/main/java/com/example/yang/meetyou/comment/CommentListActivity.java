@@ -1,4 +1,4 @@
-package com.example.yang.meetyou;
+package com.example.yang.meetyou.comment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.homePage.ActivityContentActivity;
+import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.model.Comment;
 import com.example.yang.meetyou.model.CommentJson;
 import com.example.yang.meetyou.utils.DownloadImageTask;

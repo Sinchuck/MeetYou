@@ -1,4 +1,4 @@
-package com.example.yang.meetyou;
+package com.example.yang.meetyou.homePage;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.R;
+import com.example.yang.meetyou.comment.CommentListActivity;
 import com.example.yang.meetyou.model.HuodongDetailsJson;
 import com.example.yang.meetyou.userMessageCenter.OthersPersonalMessageActivity;
 import com.example.yang.meetyou.utils.DownloadImageTask;

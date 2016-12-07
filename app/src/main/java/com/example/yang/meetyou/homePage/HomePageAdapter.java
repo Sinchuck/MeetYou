@@ -1,4 +1,4 @@
-package com.example.yang.meetyou;
+package com.example.yang.meetyou.homePage;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.model.Huodong;
 import com.example.yang.meetyou.utils.DownloadImageTask;
 

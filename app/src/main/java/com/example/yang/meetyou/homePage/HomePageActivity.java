@@ -1,4 +1,4 @@
-package com.example.yang.meetyou;
+package com.example.yang.meetyou.homePage;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.concern.ConcernActivity;
+import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.accounts.LoginActivity;
 import com.example.yang.meetyou.model.HomePageJson;
 import com.example.yang.meetyou.model.Huodong;

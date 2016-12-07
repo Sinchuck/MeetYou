@@ -1,4 +1,4 @@
-package com.example.yang.meetyou;
+package com.example.yang.meetyou.comment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.yang.meetyou.homePage.ActivityContentActivity;
+import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.utils.PreferenceUtil;
 
 import org.json.JSONException;
@@ -29,10 +31,10 @@ import okhttp3.Response;
 /**
  * Created by Yang on 2016/11/19.
  */
-public class CommentDialogFragment extends DialogFragment implements View.OnClickListener {
+public class AnswerDialogFragment extends DialogFragment implements View.OnClickListener {
 
     private static final int SHOW_TOAST = 11;
-    private static final String TAG = "CommentDialogFragment";
+    private static final String TAG = "AnswerDialogFragment";
 
 
     private TextView title;
@@ -45,6 +47,7 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
     final OkHttpClient mClient = new OkHttpClient();
     private String msg;
 
+    public static String commentId = "";
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -58,12 +61,13 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
         }
     };
 
-     public static CommentDialogFragment newInstance(Context context) {
+     public static AnswerDialogFragment newInstance(Context context,String id) {
 
         Bundle args = new Bundle();
-        CommentDialogFragment fragment = new CommentDialogFragment();
+        AnswerDialogFragment fragment = new AnswerDialogFragment();
         fragment.setArguments(args);
          mContext = context;
+         commentId = id;
 
         return fragment;
     }
@@ -75,9 +79,9 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
         sure_tv = (TextView) view.findViewById(R.id.save_nickname_bt);
         comment_edit = (EditText) view.findViewById(R.id.edit_user_nickname);
         title = (TextView) view.findViewById(R.id.title_nick_name_dialog);
-        title.setText("发表用户评论");
-        comment_edit.setHint("请输入你的评论");
-        sure_tv.setText("发表");
+        title.setText("回复用户评论");
+        comment_edit.setHint("请输入你的回复");
+        sure_tv.setText("回复");
 
         cancel_tv.setOnClickListener(this);
         sure_tv.setOnClickListener(this);
@@ -89,7 +93,7 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
     private void saveComment() {
         comment = comment_edit.getText().toString();
         if (comment.equals("")) {
-            handler.obtainMessage(SHOW_TOAST, "评论不可为空").sendToTarget();
+            handler.obtainMessage(SHOW_TOAST, "回复不可为空").sendToTarget();
             return;
         }
 
@@ -106,7 +110,7 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
             public void run() {
 
                 String requestURL = "http://139.199.180.51/meetyou/public/comment?activity_id="+CommentListActivity.activity_id
-                        +"&user_account="+account+"&comment_id=-100&content="+comment;
+                        +"&user_account="+account+"&comment_id="+commentId+"&content="+comment;
                 final Request request = new Request.Builder()
                         .get()
                         .tag(this)
@@ -122,12 +126,11 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
                             JSONObject jsonObject = new JSONObject(response2);
                             Log.i(TAG, response2);
                             int  status = jsonObject.getInt("msgCode");
-                            Log.i("123", status + "");
                             msg = jsonObject.getString("msg");
                             if (status == 503) {
-                                handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+
                             }else if(status == 504){
-                                handler.obtainMessage(SHOW_TOAST,msg).sendToTarget();
+
                             }
 
                         } catch (JSONException je) {
@@ -156,8 +159,7 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
                 Intent i = new Intent(getActivity(), ActivityContentActivity.class);
                 i.putExtras(bundle);
                 startActivity(i);
-
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
                 break;
         }
     }
