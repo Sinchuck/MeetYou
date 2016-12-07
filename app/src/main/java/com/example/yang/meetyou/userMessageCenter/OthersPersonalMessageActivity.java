@@ -47,7 +47,6 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
     ImageView mOthersImage;
 
     TextView otherPublishedActivityTextView;
-    TextView mActivityNameTextView;
     TextView mOthersNickname;
     TextView mOthersAccount;
     TextView mOthersGender;
@@ -66,14 +65,10 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
 
     private int status;
 
-    boolean isFollowed;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.others_personal_message);
-        mActivityNameTextView = (TextView) findViewById(R.id.tv_activity_name);
-        mActivityNameTextView.setText("个人详细信息");
         otherPublishedActivityTextView = (TextView) findViewById(R.id.tv_activity_published);
         otherPublishedActivityTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,7 +168,7 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
             if (status == 309) {
                 mWatchOthers.setText("取消关注");
             } else if (status == 310) {
-                Toast.makeText(OthersPersonalMessageActivity.this, "关注失败", Toast.LENGTH_SHORT).show();;
+                Toast.makeText(OthersPersonalMessageActivity.this, "关注失败", Toast.LENGTH_SHORT).show();
             } else if (status == 311) {
                 mWatchOthers.setText("关注");
             } else if (status == 312) {

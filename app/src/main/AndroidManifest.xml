@@ -29,7 +29,9 @@
         <activity android:name=".userMessageCenter.PersonalCenterActivity"/>
         <activity android:name=".publish.PublishActivity"/>
         <activity android:name=".ConcernActivity"/>
-        <activity android:name=".ActivityContentActivity"/>
+        <activity android:name=".ActivityContentActivity"
+            android:launchMode="singleTask"
+            android:parentActivityName=".HomePageActivity"/>
         <activity android:name=".userMessageCenter.OthersPersonalMessageActivity"/>
         <activity android:name=".userMessageCenter.MyselfPersonalMessageActivity"/>
         <activity android:name=".ActivityHasPublishedByUserActivity"/>

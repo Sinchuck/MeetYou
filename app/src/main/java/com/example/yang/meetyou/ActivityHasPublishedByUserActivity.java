@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yang.meetyou.model.ConcernActivityJson;
@@ -35,8 +34,6 @@ public class ActivityHasPublishedByUserActivity extends AppCompatActivity {
     ListView mActivityHasPublishedListView;
     List<Huodong> mHuodongHasPublishedList = new ArrayList<>();
 
-    TextView  mActivityNameTextView;
-
     int publishedActivityMsgCode;
     String userAccount;
 
@@ -47,8 +44,6 @@ public class ActivityHasPublishedByUserActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_has_published_by_user);
-        mActivityNameTextView = (TextView) findViewById(R.id.tv_activity_name);
-        mActivityNameTextView.setText("用户已发布的活动");
         mActivityHasPublishedListView = (ListView) findViewById(R.id.lv_activity_has_published_by_user);
 
         mActivityHasPublishedListView.setAdapter(new ActivityAdapter

@@ -29,9 +29,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * Created by Yang on 2016/9/26.
- */
 public class ActivityContentActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "ActivityContentActivity";
@@ -48,7 +45,6 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
     String othersUserAccount;
 
     LinearLayout mHeadsLinear;
-    TextView mActivityNameTextView;
 
     OkHttpClient mClient = new OkHttpClient();
     Gson mGson = new Gson();
@@ -68,8 +64,6 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
-        mActivityNameTextView = (TextView) findViewById(R.id.tv_activity_name);
-        mActivityNameTextView.setText("活动详情");
         mHeadsLinear = (LinearLayout)findViewById(R.id.linear_other_heads);
         mHeadsLinear.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -62,7 +62,6 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
     private static final int SET_PRIVACY = 18;
 
 
-    private TextView mActivityNameTextView;
     private RelativeLayout nickname_rl;
     private RelativeLayout sex_rl;
     private RelativeLayout signature_rl;
@@ -189,7 +188,6 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myself_personal_meaasge);
-        mActivityNameTextView = (TextView) findViewById(R.id.tv_activity_name);
         nickname_rl = (RelativeLayout) findViewById(R.id.rl_name);
         sex_rl = (RelativeLayout) findViewById(R.id.rl_sex);
         signature_rl = (RelativeLayout) findViewById(R.id.rl_signature);
@@ -224,7 +222,6 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         signature_rl.setOnClickListener(this);
         head_rl.setOnClickListener(this);
         contact_rl.setOnClickListener(this);
-        mActivityNameTextView.setText("个人详细信息");
     }
 
     public void showSexDialog() {
