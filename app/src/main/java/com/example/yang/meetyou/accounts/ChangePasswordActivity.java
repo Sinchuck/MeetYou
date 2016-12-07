@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yang.meetyou.R;
+import com.example.yang.meetyou.utils.RegexUtils;
 import com.example.yang.meetyou.views.CleanEditText;
 
 import org.json.JSONException;
@@ -77,18 +78,27 @@ public class ChangePasswordActivity extends AppCompatActivity {
         String newPasswordAgain = mNewPasswordAgainEt.getText().toString();
 
 
-        if (!isInputSame(newPassword, newPasswordAgain)) {
-            Toast.makeText(ChangePasswordActivity.this, "两次输入不一样，请重新输入",
-                    Toast.LENGTH_SHORT).show();
-            mNewPasswordEt.setText("");
-            mNewPasswordAgainEt.setText("");
+        if (newPassword == null || newPassword.trim().equals("") || newPasswordAgain == null || newPasswordAgain.trim().equals("")) {
+            Toast.makeText(this, "请输入你的密码", Toast.LENGTH_SHORT).show();
         } else {
-            oldPassworld = mOldPasswordEt.getText().toString();
-            newPassworld = mNewPasswordAgainEt.getText().toString();
-            account = mAccount.getText().toString();
-            new GetStatus().execute();
+            if (!isInputSame(newPassword, newPasswordAgain)) {
+                Toast.makeText(ChangePasswordActivity.this, "两次输入不一样，请重新输入",
+                        Toast.LENGTH_SHORT).show();
+                mNewPasswordEt.setText("");
+                mNewPasswordAgainEt.setText("");
+            } else {
+                if (!RegexUtils.checkPassword(newPassword)) {
+                    Toast.makeText(this, "密码需包含英文字母和数字，且在6到20位之间",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    oldPassworld = mOldPasswordEt.getText().toString();
+                    newPassworld = mNewPasswordAgainEt.getText().toString();
+                    account = mAccount.getText().toString();
+                    new GetStatus().execute();
+                    }
+                }
+            }
         }
-    }
 
     private class GetStatus extends AsyncTask<Void, Void, Boolean> {
 
