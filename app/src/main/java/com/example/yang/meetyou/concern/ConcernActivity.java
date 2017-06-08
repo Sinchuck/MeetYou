@@ -115,7 +115,7 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
 
         private final String account = PreferenceUtil.getString(ConcernActivity.this, PreferenceUtil.ACCOUNT);
 
-        String refresh = "http://139.199.180.51/meetyou/public/refreshSocietyActivity?user_account=" + account;
+        String refresh = "http://118.89.37.26/meetyou/public/refreshSocietyActivity?user_account=" + account;
 
         @Override
         protected List<Huodong> doInBackground(String... params) {
@@ -166,7 +166,7 @@ public class ConcernActivity extends AppCompatActivity implements View.OnClickLi
 
         private final String account = PreferenceUtil.getString(ConcernActivity.this, PreferenceUtil.ACCOUNT);
 
-        String refresh = "http://139.199.180.51/meetyou/public/refreshSocietyUser?user_account=" + account;
+        String refresh = "http://118.89.37.26/meetyou/public/refreshSocietyUser?user_account=" + account;
 
         @Override
         protected List<Person> doInBackground(String... params) {

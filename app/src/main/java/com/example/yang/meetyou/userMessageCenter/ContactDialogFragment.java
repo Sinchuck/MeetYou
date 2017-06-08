@@ -102,7 +102,7 @@ public class ContactDialogFragment extends DialogFragment implements View.OnClic
             @Override
             public void run() {
 
-                String requestURL = "http://139.199.180.51/meetyou/public/updateUserInfo?operation=CONTACTS&user_account=" + account + "&value=" + contact;
+                String requestURL = "http://118.89.37.26/meetyou/public/updateUserInfo?operation=CONTACTS&user_account=" + account + "&value=" + contact;
 
                 final Request request = new Request.Builder()
                         .get()

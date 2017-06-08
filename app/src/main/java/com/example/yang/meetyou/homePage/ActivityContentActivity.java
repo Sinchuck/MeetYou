@@ -95,7 +95,7 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
         Bundle bundle = getIntent().getExtras();
         activityId = bundle.getString("activityId");
         user_account = PreferenceUtil.getString(ActivityContentActivity.this, PreferenceUtil.ACCOUNT);
-        huodongDetails = "http://139.199.180.51/meetyou/public/activityInfo?activity_id="
+        huodongDetails = "http://118.89.37.26/meetyou/public/activityInfo?activity_id="
                 + activityId + "&user_account=" + user_account;
 
         new GetActivityData().execute();
@@ -179,7 +179,7 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
                         @Override
                         public void run() {
                             String account = PreferenceUtil.getString(ActivityContentActivity.this, PreferenceUtil.ACCOUNT);
-                            String requestURL = " http://139.199.180.51/meetyou/public/participate?activity_id="+activityId+"&user_account=" + account;
+                            String requestURL = " http://118.89.37.26/meetyou/public/participate?activity_id="+activityId+"&user_account=" + account;
 
                             final Request request = new Request.Builder()
                                     .get()
@@ -222,7 +222,7 @@ public class ActivityContentActivity extends AppCompatActivity implements View.O
                         @Override
                         public void run() {
                             String account = PreferenceUtil.getString(ActivityContentActivity.this, PreferenceUtil.ACCOUNT);
-                            String requestURL = " http://139.199.180.51/meetyou/public/participateCancel?activity_id="+activityId+"&user_account=" + account;
+                            String requestURL = " http://118.89.37.26/meetyou/public/participateCancel?activity_id="+activityId+"&user_account=" + account;
 
                             final Request request = new Request.Builder()
                                     .get()

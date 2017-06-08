@@ -20,7 +20,7 @@ public class HttpRequestUtils extends AsyncTask<Void, Void, Boolean> {
 
     private OkHttpClient mClient = new OkHttpClient();
 
-    private static final String IP = "http://139.199.180.51/";
+    private static final String IP = "http://118.89.37.26/";
     private static final String PATH = "meetyou/public/";
     public String fullRequest;
 

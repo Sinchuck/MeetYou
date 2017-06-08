@@ -121,7 +121,7 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(String... params) {
 
-            String requestURL = " http://139.199.180.51/meetyou/public/" + params[0] + "?user_account="
+            String requestURL = " http://118.89.37.26/meetyou/public/" + params[0] + "?user_account="
                     + params[1] + "&follow_user_account=" + params[2];
 
             final Request request = new Request.Builder()
@@ -183,7 +183,7 @@ public class OthersPersonalMessageActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                requestURL = "http://139.199.180.51/meetyou/public/otherUserInfo?user_account=" + othersAccount
+                requestURL = "http://118.89.37.26/meetyou/public/otherUserInfo?user_account=" + othersAccount
                     + "&using_account=" + usingAccount;
 
                 final Request request = new Request.Builder()

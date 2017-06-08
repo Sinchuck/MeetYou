@@ -275,7 +275,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     break;
             }
 
-            String requestURL = "http://139.199.180.51/meetyou/public/release?activity_tag="+type+"&activity_theme="+theme+"&activity_time="+dateString
+            String requestURL = "http://118.89.37.26/meetyou/public/release?activity_tag="+type+"&activity_theme="+theme+"&activity_time="+dateString
                     +"&activity_details="+content +"&activity_participants_max_count="+num_of_activity_person+"&user_account="+ PreferenceUtil.getString(PublishActivity.this, PreferenceUtil.ACCOUNT);
 
             final Request request = new Request.Builder()

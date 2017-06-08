@@ -77,7 +77,7 @@ public class ActivityHasPublishedByUserActivity extends AppCompatActivity {
         @Override
         protected List<Huodong> doInBackground(String... params) {
 
-            String refresh = "http://139.199.180.51/meetyou/public/userActivity?user_account=" + userAccount;
+            String refresh = "http://118.89.37.26/meetyou/public/userActivity?user_account=" + userAccount;
 
             final Request request = new Request.Builder()
                     .get()

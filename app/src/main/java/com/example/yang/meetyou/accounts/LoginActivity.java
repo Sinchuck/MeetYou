@@ -167,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            String requestURL = "http://139.199.180.51/meetyou/public/login?user_account=" + account
+            String requestURL = "http://118.89.37.26/meetyou/public/login?user_account=" + account
                     + "&user_passwd=" + password;
 
             final Request request = new Request.Builder()

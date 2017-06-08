@@ -97,7 +97,7 @@ public class SignatureDialogFragment extends DialogFragment implements View.OnCl
             @Override
             public void run() {
 
-                String requestURL = "http://139.199.180.51/meetyou/public/updateUserInfo?operation=DESCRIPTION&user_account=" + account + "&value=" + signature;
+                String requestURL = "http://118.89.37.26/meetyou/public/updateUserInfo?operation=DESCRIPTION&user_account=" + account + "&value=" + signature;
 
                 final Request request = new Request.Builder()
                         .get()

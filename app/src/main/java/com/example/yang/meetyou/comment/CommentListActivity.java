@@ -95,7 +95,7 @@ public class CommentListActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                String requestURL = "http://139.199.180.51/meetyou/public/getComment?activity_id="+activity_id;
+                String requestURL = "http://118.89.37.26/meetyou/public/getComment?activity_id="+activity_id;
                 final Request request = new Request.Builder()
                         .get()
                         .tag(this)
@@ -201,7 +201,7 @@ public class CommentListActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
 
-                                    String requestURL = "http://139.199.180.51/meetyou/public/deleteComment?comment_id=" + comment1.getCommentId();
+                                    String requestURL = "http://118.89.37.26/meetyou/public/deleteComment?comment_id=" + comment1.getCommentId();
                                     final Request request = new Request.Builder()
                                             .get()
                                             .tag(this)

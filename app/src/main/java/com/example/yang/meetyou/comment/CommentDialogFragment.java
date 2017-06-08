@@ -107,7 +107,7 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
             @Override
             public void run() {
 
-                String requestURL = "http://139.199.180.51/meetyou/public/comment?activity_id="+CommentListActivity.activity_id
+                String requestURL = "http://118.89.37.26/meetyou/public/comment?activity_id="+CommentListActivity.activity_id
                         +"&user_account="+account+"&comment_id=-100&content="+comment;
                 final Request request = new Request.Builder()
                         .get()

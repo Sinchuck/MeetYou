@@ -1,6 +1,8 @@
 package com.example.yang.meetyou.userMessageCenter;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,10 +29,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.yang.meetyou.R;
 import com.example.yang.meetyou.utils.DownloadImageTask;
 import com.example.yang.meetyou.utils.OkHttpClientManager;
 import com.example.yang.meetyou.utils.PreferenceUtil;
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.flipboard.bottomsheet.commons.ImagePickerSheetView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,6 +93,12 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
     private int index = 2;
     private int privacy_index =0;
 
+
+    private BottomSheetLayout bottomSheetLayout;
+    private ImagePickerSheetView.Builder builder;
+    private Uri imageCaptureUri;
+    private Uri imageCropUri;
+
     protected void getUserMessage () {
 
         final String account = PreferenceUtil.getString(MyselfPersonalMessageActivity.this, PreferenceUtil.ACCOUNT);
@@ -95,7 +106,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String requestURL = " http://139.199.180.51/meetyou/public/userInfo?user_account=" + account;
+                String requestURL = " http://118.89.37.26/meetyou/public/userInfo?user_account=" + account;
 
                 final Request request = new Request.Builder()
                         .get()
@@ -202,8 +213,9 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         contacts_tv =(TextView)findViewById(R.id.tv_user_contact);
         signature_tv = (TextView) findViewById(R.id.tv_user_signature);
         privacy_bt = (Button) findViewById(R.id.bt_privacy);
+        bottomSheetLayout = (BottomSheetLayout) findViewById(R.id.bs_root);
 
-
+        initSelectWindow();
 
         getUserMessage();
 
@@ -247,7 +259,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
                         Thread thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                String requestURL = "http://139.199.180.51/meetyou/public/updateUserInfo?operation=SEX&user_account="+account+"&value="+index;
+                                String requestURL = "http://118.89.37.26/meetyou/public/updateUserInfo?operation=SEX&user_account="+account+"&value="+index;
 
                                 final Request request = new Request.Builder()
                                         .get()
@@ -342,7 +354,7 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                String requestURL = "http://139.199.180.51/meetyou/public/changePrivacy?user_account="+account+"&user_privacy=+"+privacy_index;
+                String requestURL = "http://118.89.37.26/meetyou/public/changePrivacy?user_account="+account+"&user_privacy=+"+privacy_index;
 
                 final Request request = new Request.Builder()
                         .get()
@@ -378,6 +390,129 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
         thread.start();
     }
 
+    private void initSelectWindow() {
+
+
+        builder = new ImagePickerSheetView.Builder(MyselfPersonalMessageActivity.this);
+        builder.setTitle("请选择头像");
+        builder.setMaxItems(100);
+        builder.setOnTileSelectedListener(new ImagePickerSheetView.OnTileSelectedListener() {
+            @Override
+            public void onTileSelected(ImagePickerSheetView.ImagePickerTile selectedTile) {
+                if (selectedTile.isCameraTile()) {
+                    takePhoto();
+                } else if (selectedTile.isPickerTile()) {
+                    pickPhoto();
+                } else if (selectedTile.isImageTile()) {
+                    startPhotoZoom(selectedTile.getImageUri());
+                }
+                bottomSheetLayout.dismissSheet();
+            }
+        });
+        builder.setImageProvider(new ImagePickerSheetView.ImageProvider() {
+            @Override
+            public void onProvideImage(ImageView imageView, Uri imageUri, int size) {
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                Glide.with(MyselfPersonalMessageActivity.this)
+                        .load(imageUri)
+                        .centerCrop()
+                        .crossFade()
+                        .into(imageView);
+            }
+        });
+
+    }
+
+    /**
+     * 调用系统直接拍照
+     */
+    private void takePhoto() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File file = new File(Environment.getExternalStorageDirectory(),
+                "time_"
+                        + String.valueOf(System.currentTimeMillis())
+                        + ".jpg");
+        imageCaptureUri = Uri.fromFile(file);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                imageCaptureUri);
+        if (checkIntentAndSd(intent))
+            startActivityForResult(intent, TOOK_PHOTO);
+
+    }
+
+    /**
+     * 选择图片
+     */
+    private void pickPhoto() {
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                "image/*");
+        if (checkIntentAndSd(intent))
+            startActivityForResult(intent, SELET_IN_PHONE);
+
+    }
+
+    /**
+     * 裁剪图片方法实现
+     *
+     * @param uri
+     */
+    public void startPhotoZoom(Uri uri) {
+        try {
+            File file = new File(Environment.getExternalStorageDirectory(),
+                    "time_"
+                            + String.valueOf(System.currentTimeMillis())
+                            + ".jpg");
+            imageCropUri = Uri.fromFile(file);
+            Intent intent = new Intent("com.android.camera.action.CROP");
+            intent.setDataAndType(uri, "image/*");
+            //下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
+            intent.putExtra("crop", "true");
+            // aspectX aspectY 是宽高的比例
+            intent.putExtra("aspectX", 180);
+            intent.putExtra("aspectY", 180);
+            // outputX outputY 是裁剪图片宽高
+            intent.putExtra("outputX", 180);
+            intent.putExtra("outputY", 180);
+
+            intent.putExtra("scaleUpIfNeeded", true);
+            intent.putExtra("scale", true);
+
+            intent.putExtra("return-data", false);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageCropUri);
+            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+
+            startActivityForResult(intent, REQUEST_TO_PHOTOCUTED_AND_SEND_TO_SEVER);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(MyselfPersonalMessageActivity.this, "您的手机不支持截图", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * 检查SD卡是否存在
+     * 检查隐式intent是否存在
+     *
+     * @param intent
+     * @return
+     */
+    private boolean checkIntentAndSd(Intent intent) {
+        //检查
+        if (!android.os.Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Toast.makeText(MyselfPersonalMessageActivity.this, "请先插入SD卡", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        ComponentName componentName = intent.resolveActivity(MyselfPersonalMessageActivity.this.getPackageManager());
+        if (componentName == null) {
+            Toast.makeText(MyselfPersonalMessageActivity.this, "找不到对应的应用", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
+    public void aq_modify_avatar() {
+        bottomSheetLayout.showWithSheetView(builder.create());
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -393,22 +528,24 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
                 signatureDialogFragment.show(getSupportFragmentManager(),"SignatureDialogFragment");
                 break;
             case R.id.rl_head:
-                showPopupWindow();
+                aq_modify_avatar();
                 break;
             case R.id.took_photo:
-                mPopWindow.dismiss();
-                Intent it = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                it.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-                it.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(it, TOOK_PHOTO);
-                break;
-            case R.id.select_in_phone:
-                mPopWindow.dismiss();
-                Intent local = new Intent();
-                local.setType("image/*");
-                local.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(local, SELET_IN_PHONE);
-                break;
+////                mPopWindow.dismiss();
+////                Intent it = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//////                it.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+////                it.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+////                startActivityForResult(it, TOOK_PHOTO);
+//                takePhoto();
+//                break;
+//            case R.id.select_in_phone:
+////                mPopWindow.dismiss();
+////                Intent local = new Intent();
+////                local.setType("image/*");
+////                local.setAction(Intent.ACTION_GET_CONTENT);
+////                startActivityForResult(local, SELET_IN_PHONE);
+//                pickPhoto();
+//                break;
             case R.id.rl_contact:
                 ContactDialogFragment contactDialogFragment = ContactDialogFragment.newInstance(MyselfPersonalMessageActivity.this);
                 contactDialogFragment.show(this.getSupportFragmentManager(), "ContactDialogFragment");
@@ -437,13 +574,13 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
                 case TOOK_PHOTO:
                     //根据所拍图片保存的文件路径获取拍照获得的Bitmap
 //                    Bitmap b = data.getExtras().getParcelable("data");
-                    Bitmap b = BitmapFactory.decodeFile(imageUri.getPath());
-                    Uri uriCapture = Uri.parse(MediaStore.Images.Media.insertImage(this.getContentResolver(), b, null,null));
-                    cutImage(uriCapture);
+//                    Bitmap b = BitmapFactory.decodeFile(imageCaptureUri.getPath());
+//                    Uri uriCapture = Uri.parse(MediaStore.Images.Media.insertImage(this.getContentResolver(), b, null,null));
+                    startPhotoZoom(imageCaptureUri);
                     break;
                 case SELET_IN_PHONE:
                     Uri uriSelectInPhone = data.getData();
-                    cutImage(uriSelectInPhone);
+                    startPhotoZoom(uriSelectInPhone);
                     break;
                 case REQUEST_TO_PHOTOCUTED_AND_SEND_TO_SEVER:
                     Bundle bundle = data.getExtras();
@@ -454,8 +591,8 @@ public class MyselfPersonalMessageActivity extends AppCompatActivity implements 
                     String account = PreferenceUtil.getString(MyselfPersonalMessageActivity.this, PreferenceUtil.ACCOUNT);
 
                     try {
-                       File file = new File(imageUri.getPath());
-                        OkHttpClientManager.postAsyn("http://139.199.180.51/meetyou/public/uploadImage",//
+                       File file = new File(imageCropUri.getPath());
+                        OkHttpClientManager.postAsyn("http://118.89.37.26/meetyou/public/uploadImage",//
                                 new OkHttpClientManager.ResultCallback<String>() {
                                     @Override
                                     public void onError(com.squareup.okhttp.Request request, Exception e) {

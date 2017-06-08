@@ -153,7 +153,7 @@ implements AdapterView.OnItemSelectedListener {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            String requestURL = "http://139.199.180.51/meetyou/public/register?user_account=" + account
+            String requestURL = "http://118.89.37.26/meetyou/public/register?user_account=" + account
                     + "&user_passwd=" + password + "&user_nickName=" + nickname
                     +"&user_sex=" + gender + "&user_contacts=" + phoneNumber;
 

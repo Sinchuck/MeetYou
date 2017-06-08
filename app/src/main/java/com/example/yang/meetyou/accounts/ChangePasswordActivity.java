@@ -109,7 +109,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            String requestURL = "http://139.199.180.51/meetyou/public/changePassWd?user_account=" +
+            String requestURL = "http://118.89.37.26/meetyou/public/changePassWd?user_account=" +
                     account + "&user_oldPasswd=" + oldPassworld + " &user_newPasswd=" + newPassworld;
             final Request request = new Request.Builder()
                     .get()
